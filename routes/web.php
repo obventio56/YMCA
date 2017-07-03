@@ -19,6 +19,9 @@ Auth::routes();
 
 Route::get('/home', 'HomeController@index')->name('home');
 
+Route::get('/users/{role?}', 'UserController@index')->name('users_index');
+
+
 Route::get('/location/new', 'LocationController@new_location')->name('new_location');
 
 Route::post('/location/create', 'LocationController@create_location')->name('create_location');

@@ -1,0 +1,13 @@
+.navbar-inner{
+	display: none;
+}
+table{ 
+	page-break-before: auto;
+}
+tr{ 
+	page-break-inside: avoid; 
+	page-break-before: auto;
+}
+#content {
+	padding-top: 0;
+}

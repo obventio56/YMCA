@@ -1,0 +1,98 @@
+
+.navbar{
+
+}
+.navbar-inner{
+	background: none;
+	padding: 20px 0;
+}
+.brand{
+	width: 300px;
+}
+.brand img{
+	float: left;
+	width: 20%;
+}
+.brand span{
+	float: right;
+	width: 80%;
+}
+.navbar .nav > li > a{
+	float: none;
+	padding: 9px 10px 11px;
+	line-height: 19px;
+	color: #fff;
+	text-decoration: none;
+	text-shadow: 0 -1px 0 rgba(0, 0, 0, 0.25);
+}
+.navbar .nav > li > a:hover{
+	color: #FDB935;
+}
+
+#content{
+	padding-top: 130px;
+}
+#content h1{
+	font-size: 3.2em;
+	line-height: 1.0em;
+	color: #EE7022;
+	text-transform: uppercase;
+}
+.container .table{
+	box-shadow: 0 0 5px rgba(0,0,0,0.1);
+}
+.container .table td b a{
+	color: #EE7022;
+}
+a{
+	color: #EE7022;
+}
+/*/////////////////////////////////////////////////////////
+ Dan's Y styling 
+/////////////////////////////////////////////////////////*/
+html body header .navbar{
+	background: #0089d0 !important;
+	background-color: #0089d0 !important;
+	background-image: none !important;
+}
+.navbar-inner {
+  min-height: 40px;
+  padding-right: 20px;
+  padding-left: 20px;
+  background-color: #0089d0 !important;
+  background-image: -moz-linear-gradient(top, #0089d0, #0089d0) !important;
+  background-image: -webkit-gradient(linear, 0 0, 0 100%, from(#0089d0), to(#0089d0)) !important;
+  background-image: -webkit-linear-gradient(top, #0089d0, #0089d0) !important;
+  background-image: -o-linear-gradient(top, #0089d0, #0089d0) !important;
+  background-image: linear-gradient(to bottom, #0089d0, #0089d0) !important;
+  background-image: #0089d0 !important;
+  background-repeat: repeat-x;
+  border: none;
+  -webkit-border-radius: 4px;
+     -moz-border-radius: 4px;
+          border-radius: 4px;
+  filter: progid:DXImageTransform.Microsoft.gradient(startColorstr='#ff0089d0', endColorstr='#ff0089d0', GradientType=0) !important;
+  *zoom: 1;
+  -webkit-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+     -moz-box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+          box-shadow: 0 1px 4px rgba(0, 0, 0, 0.065);
+}
+
+.calendar td { width: 14.28%; }
+
+
+/*.navbar-inner {
+min-height:40px;
+padding-left:20px;
+padding-right:20px;
+background-color:#2c2c2c;
+background-image:linear-gradient(top,#333,#222);
+background-repeat:repeat-x;
+filter:progid:DXImageTransform.Microsoft.gradient(startColorstr='#FF333333',endColorstr='#FF222222',GradientType=0);
+-webkit-border-radius:4px;
+-moz-border-radius:4px;
+border-radius:4px;
+-webkit-box-shadow:0 1px 3px rgba(0,0,0,0.25),inset 0 -1px 0 rgba(0,0,0,0.1);
+-moz-box-shadow:0 1px 3px rgba(0,0,0,0.25),inset 0 -1px 0 rgba(0,0,0,0.1);
+box-shadow:0 1px 3px rgba(0,0,0,0.25),inset 0 -1px 0 rgba(0,0,0,0.1);
+}*/

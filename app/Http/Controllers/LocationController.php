@@ -23,18 +23,23 @@ class LocationController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function new_location()
+  
+    public function index()
     {
-        return view('locations.new');
+      $locations = Location::all();
+      return view('locations.index', ['locations' => $locations]);
     }
   
     public function create_location(Request $request)
     {
       $location = new Location;
+      
       $location->title = $request->title;
-      $location->notes = $request->notes;
+      $location->description = $request->description;
+      $location->user_id = Auth::user()->id;
+      
       $location->save();
         
-      return Location::all();
+      return redirect('locations');
     }
 }
