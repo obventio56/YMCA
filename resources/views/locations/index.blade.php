@@ -1,6 +1,11 @@
+@extends('layouts.app')
+
+@section('content')
+
 <div class="container">
 	<h3>Locations</h3>
 	<p>You'll find all of your locations listed below. Locations are places that events can be held.</p>
+	<a href="{{route("new-location")}}" class="btn btn-success" style="margin-right: 9px;">Create Location</a>
 	<br/><br/>
 	<table class="table table-bordered table-striped">
 	  <thead>
@@ -16,17 +21,13 @@
 	    <tr>
 	    	<td style="width: 120px;"><b>{{ $location->title }}</b></td>
 	      <td><p>{{ $location->description }}</td>
-	      <td>{{ $location->user->email }}</td>
-        <td><a href="#">Delete Location</a><a href="#">Edit Location</a></td>
+	      <td><a href="mailto:{{ $location->manager_email }}">{{ $location->manager_email }}</td>
+        <td><a class="btn btn-danger pull-right" href="{{ route("destroy-location", [$location] ) }}">Delete Location</a>
+						<a class="btn btn-info pull-right" href="{{ route("edit-location", [$location] ) }}">Edit Location</a></td>
 	    </tr>
 	    @endforeach
 	  </tbody>
 	</table>
 </div>
 
-<form action="/location/create" method="post">
-  {{ csrf_field() }}
-  <input name="title" type="text" placeholder="Title" />
-  <textarea name="description" placeholder="Description" ></textarea>
-  <input type="Submit"/>
-</form>
+@endsection

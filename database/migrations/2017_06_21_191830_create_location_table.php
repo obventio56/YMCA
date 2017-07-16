@@ -17,6 +17,7 @@ class CreateLocationTable extends Migration
             $table->increments('id');
             $table->string('title');
             $table->string('description');
+            $table->string('manager_email');
             $table->integer('user_id');
             $table->timestamps();
         });

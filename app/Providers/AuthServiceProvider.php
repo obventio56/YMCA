@@ -4,6 +4,7 @@ namespace App\Providers;
 
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
+use Illuminate\Support\Facades\Auth;
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -26,8 +27,25 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
       
-        Gate::define('users_index', function ($user) {
-          return $user->role == 1;
+        Gate::define('show-user', function ($user, $id) {
+          
+          return $user->role == 1 || $user->role == 2 || $user.id == $id;
+        });
+      
+        Gate::define('edit-user', function ($user, $id) {
+          return $user->role == 1 || $user->role == 2 || $user.id == $id;
+        });
+      
+        Gate::define('update-user', function ($user, $id) {
+          return $user->role == 1 || $user->role == 2 || $user.id == $id;
+        });
+      
+        Gate::define('edit-user', function ($user, $id) {
+          return $user->role == 1 || $user->role == 2 || $user.id == $id;
+        });
+      
+        Gate::define('users-index', function ($user) {
+          return $user->role == 1 || $user->role == 2;
         });
         //
     }
