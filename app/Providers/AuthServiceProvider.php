@@ -5,6 +5,15 @@ namespace App\Providers;
 use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
+use App\Reservation;
+use App\Event;
+use App\Registration;
+
+
+//There is a file structure for authorization but I don't think it's too
+//complicated to leave it all here.
+//I don't prevent anyone from viewing the related edit pages but
+//if an unauthorized person actually takes action they will be deined.
 
 class AuthServiceProvider extends ServiceProvider
 {
@@ -27,26 +36,53 @@ class AuthServiceProvider extends ServiceProvider
         $this->registerPolicies();
 
       
-        Gate::define('show-user', function ($user, $id) {
+      
+        //user gates
+        Gate::define('manipulate-user', function ($current_user, $user) {
           
-          return $user->role == 1 || $user->role == 2 || $user.id == $id;
-        });
-      
-        Gate::define('edit-user', function ($user, $id) {
-          return $user->role == 1 || $user->role == 2 || $user.id == $id;
-        });
-      
-        Gate::define('update-user', function ($user, $id) {
-          return $user->role == 1 || $user->role == 2 || $user.id == $id;
-        });
-      
-        Gate::define('edit-user', function ($user, $id) {
-          return $user->role == 1 || $user->role == 2 || $user.id == $id;
+          return ($current_user->role == 1 || $current_user->role == 2 || $current_user.id == $user->id) && !$current_user->suspended;
         });
       
         Gate::define('users-index', function ($user) {
-          return $user->role == 1 || $user->role == 2;
+          return ($user->role == 1 || $user->role == 2) && !$user->suspended;
         });
-        //
-    }
+       
+        //Location gates
+        Gate::define('manipulate-location', function ($user) {
+          return ($user->role == 2) && !$user->suspended;
+        });
+  
+        //reservation slot gates
+        Gate::define('manipulate-reservation-slot', function ($user) {
+          return ($user->role == 2) && !$user->suspended;
+        });
+   
+        //reservation gates
+        Gate::define('manipulate-reservation', function ($user, Reservation $reservation) {
+          return ($user->role == 2 || $user->id == $reservation->user->id) && !$user->suspended;
+        });
+      
+        Gate::define('administrate-reservations', function ($user) {
+          return ($user->role == 2) && !$user->suspended;
+        });
+      
+        //event gates
+        Gate::define('create-event', function ($user) {
+          return ($user->role == 1 || $user->role == 2) && !$user->suspended;
+        });
+      
+        Gate::define('manipulate-event', function ($user, Event $event) {
+          return ($user->role == 2 || $user->id == $event->user->id) && !$user->suspended;
+        });
+      
+        //registration gates      
+        Gate::define('destroy-registration', function ($user, Registration $registration) {
+          return ($user->role == 2 || $user->id == $registration->user->id) && !$user->suspended;
+        });
+      
+        //reservation slot group gates
+        Gate::define('reservation-slot-group', function ($user) {
+          return ($user->role == 2) && !$user->suspended;
+        });
+     }
 }

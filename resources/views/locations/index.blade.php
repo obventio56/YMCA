@@ -22,8 +22,8 @@
 	    	<td style="width: 120px;"><b>{{ $location->title }}</b></td>
 	      <td><p>{{ $location->description }}</td>
 	      <td><a href="mailto:{{ $location->manager_email }}">{{ $location->manager_email }}</td>
-        <td><a class="btn btn-danger pull-right" href="{{ route("destroy-location", [$location] ) }}">Delete Location</a>
-						<a class="btn btn-info pull-right" href="{{ route("edit-location", [$location] ) }}">Edit Location</a></td>
+        <td><a class="btn btn-danger pull-right" href="{{ route("destroy-location", [$location] ) }}" >Delete Location</a>
+						<a style="margin-right: 9px;"  class="btn btn-info pull-right" href="{{ route("edit-location", [$location] ) }}">Edit Location</a></td>
 	    </tr>
 	    @endforeach
 	  </tbody>

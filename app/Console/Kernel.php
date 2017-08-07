@@ -4,6 +4,12 @@ namespace App\Console;
 
 use Illuminate\Console\Scheduling\Schedule;
 use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
+use App\Event;
+use App\Reservation;
+
+use Illuminate\Support\Facades\Mail;
+use App\Mail\RegistrationReminder;
+use App\Mail\ReservationReminder;
 
 class Kernel extends ConsoleKernel
 {
@@ -24,8 +30,26 @@ class Kernel extends ConsoleKernel
      */
     protected function schedule(Schedule $schedule)
     {
-        // $schedule->command('inspire')
-        //          ->hourly();
+        $schedule->call(function () {
+          $three_days_from_now = strtotime("+3 days", time()); //this is default from the old app, every three days
+          
+          $reservations = Reservation::where([
+            ["start_time", "<", date('Y-m-d H:i:s', $three_days_from_now) ],
+            ["start_time", ">", date('Y-m-d H:i:s') ]
+          ])->get();
+          
+          
+          foreach ($reservations as $reservation) {
+            if ($reservation->for_event) {
+              foreach ($reservation->event->registrations as $registration) {
+                Mail::to($registration->user)->send(new RegistrationReminder($registration));
+              } 
+            } else {
+              Mail::to($reservation->user)->send(new ReservationReminder($reservation));
+            }
+          }
+   
+        })->daily();
     }
 
     /**

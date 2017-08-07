@@ -4884,3 +4884,7 @@ a.label:hover,a.badge:hover {
     margin-left: -5px;
     margin-right: -5px
 }
+
+.calendar-table.table.table-bordered tr {
+  background-color:default !important;
+}

@@ -16,11 +16,14 @@ class CreateReservationsTable extends Migration
         Schema::create('reservations', function (Blueprint $table) {
             $table->dateTime('start_time');
             $table->dateTime('end_time');
+            $table->boolean('for_event')->default(false);
             $table->integer('reservation_slot_id');
             $table->integer('user_id');
-            $table->string('notes');
+            $table->string('notes')->nullable();
             $table->increments('id');
             $table->timestamps();
+            $table->softDeletes();
+            $table->foreign('reservation_slot_id')->references('id')->on('reservation_slot')->onDelete('cascade');
         });
     }
 

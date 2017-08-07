@@ -5,7 +5,16 @@
 	<h2>Edit {{$user->name}}</h2>
 	<br/>
   <form class="well" action="{{route("update-user", [$user])}}" method="POST">
-	{{ csrf_field() }}
+		@if ($errors->any())
+		<div class="alert alert-danger">
+				<ul>
+						@foreach ($errors->all() as $error)
+								<li>{{ $error }}</li>
+						@endforeach
+				</ul>
+		</div>
+		@endif
+		{{ csrf_field() }}
 
 
 		<div>
@@ -42,6 +51,13 @@
 		
 		<div><br/><lable>This is a regular user: </lable>
 	  <input type="radio" value="0" name="role" {{ $user->role_radio_button_status()[0] }}/></div><br/>
+		
+		<div><br/><lable>Suspend User?</lable>
+	  <input type="checkbox" name="suspended" 
+					 @if($user->suspended)
+						 checked
+					 @endif
+					 /></div><br/>
 	  @endif
 	
 	  <input type="submit" value="Update this User" class="btn btn-success"/>

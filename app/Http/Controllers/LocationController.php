@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Location;
+use App\Http\Requests\StoreLocation;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Gate;
 
 class LocationController extends Controller
 {
@@ -25,25 +27,28 @@ class LocationController extends Controller
      * @return \Illuminate\Http\Response
      */
   
-    public function index()
+    public function index() //this isn't authorize because users can see location information in other ways
     {
       $locations = Location::all();
       return view('locations.index', ['locations' => $locations]);
     }
   
-    public function new()
+    public function new() //i don't care if anyone can get to the form
     {
       return view('locations.new');
     }
   
-    public function create(Request $request)
+    public function create(StoreLocation $request)
     {
-      $location = new Location;
-      $location->fill($request->all());
-      $location->user_id = Auth::user()->id;
-      $location->save();
-      
-      return redirect()->route('locations-index');
+      if (Gate::allows('manipulate-location')) {
+        $location = new Location;
+        $location->fill($request->all());
+        $location->save();
+
+        return redirect()->route('locations-index')->with("status", "Successfully created location.");
+      } else {
+        return redirect()->route('events-index')->with('warning', 'You are not authorized to complete that action');
+      }
     }
   
     public function edit(Location $location)
@@ -51,15 +56,23 @@ class LocationController extends Controller
       return view('locations.edit', ['location' => $location]);
     }
   
-    public function update(Request $request, Location $location)
+    public function update(StoreLocation $request, Location $location)
     {
-      $location->update(array_filter($request->all()));
-      
-      return redirect()->route('locations-index');
+      if (Gate::allows('manipulate-location')) {
+        $location->update(array_filter($request->all()));
+
+        return redirect()->route('locations-index')->with("status", "Successfully updated location.");
+      } else {
+        return redirect()->route('events-index')->with('warning', 'You are not authorized to complete that action');
+      }
     }
   
     public function destroy(Location $location) {
-      $location->delete();
-      return redirect()->route('locations-index');
+      if (Gate::allows('manipulate-location')) {
+        $location->custom_destroy();
+        return redirect()->route('locations-index')->with("status", "Successfully destroyed location.");
+      } else {
+        return redirect()->route('events-index')->with('warning', 'You are not authorized to complete that action');
+      }
     }
 }

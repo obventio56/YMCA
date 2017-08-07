@@ -1,14 +1,21 @@
-@extends("layout.app")
+@extends("layouts.app")
 
 @section("content")
 <div class="container">
-	<h3>Reservations/Bookings</h3>
-	<p>You'll find all resources that are available for booking listed below.</p>
+	<h3>Reservation Slots and Reservations</h3>
+	<p>You'll find all reservation slots that are available to reserve listed below.</p>
 	
-<% if current_user.superuser? %>
-
-	<%= link_to "Create New Resource", new_reservation_path, :class => "btn btn-success", :style => "margin-right: 9px;" %><%= link_to "Calendar Overview", "/reservations/monthly", :class => "btn", :style => "margin-right: 9px;" %><%= link_to "Daily Racquetball/Squash", "/reservations/courts", :class => "btn", :style => "margin-right: 9px;" %>
+@if (Auth::user()->role == 2 || Auth::user()->role == 1)
+	<a class="btn btn-success" style="margin-right: 9px;" href="{{ route('new-reservation-slot') }}" >Create New Resource</a>
+@endif
+	
+@if (Auth::user()->role == 2)
+	<a href="{{route('calendar-of-reservations')}}" class="btn" style="margin-right: 9px;">Calendar Overview</a>
+	<a href="{{route('reservation-slot-groups-index')}}" class="btn" style="margin-right: 9px;">Reservation Slot Groups</a>
 	<br/><br/>
+@endif
+		
+@if ($reservation_slots)
 	<table class="table table-bordered table-striped">
 	  <thead>
 	    <tr>
@@ -19,23 +26,27 @@
 	    </tr>
 	  </thead>
 	  <tbody>
-	  	<% @reservations.each do |event| %>
+	  	@foreach ($reservation_slots as $reservation_slot)
 	    <tr>
-	    	<td style="width: 120px;"><b><a href="/reserve/<%= event.id %>"><%= event.title %></a></b></td>
+	    	<td style="width: 120px;"><b><a href="{{route('check-date-for-reservation', [$reservation_slot])}}">{{$reservation_slot->title}}</a></b></td>
 	      <td>
-	      	<p><%= event.description%></p>
+	      	<p>{{$reservation_slot->description}}</p>
 	      	<p>Copy and paste the following URL anywhere that you need to link to registration for this resource:<br/><br/>
-		      	<span style="color: #ff0000;">http://ymca-scheduler.herokuapp.com/reserve/<%= event.id %></span>
+		      	<span style="color: #ff0000;">{{route('check-date-for-reservation', [$reservation_slot])}}</span>
 	      	</p>
 	      </td>
-	      <td><%= event.email_2 %><br/><br/><%= event.email_1.gsub(",", "\n") %></td>
-	      <td style="width: 270px;"><%= link_to "Delete Resource", reservation_path(event), :confirm => "Are you sure?", :method => :delete, :class => "btn btn-danger pull-right" %> <%= link_to "Edit Resource", edit_reservation_path(event), :class => "btn btn-info pull-right", :style => "margin-right: 9px;" %></td>
+	      <td>{{$reservation_slot->primary_email}}<br/><br/>{{str_replace(",", "\n", $reservation_slot->notification_emails)}}</td>
+				<td style="width: 270px;"><a class="btn btn-danger pull-right" href="{{route("destroy-reservation-slot", [$reservation_slot])}}">Delete Resource</a>
+					<a class="btn btn-info pull-right" style="margin-right: 9px;" href="{{route("edit-reservation-slot", [$reservation_slot])}}">Edit Resource</a>
 	    </tr>
-	    <% end %>
+	    @endforeach
 	  </tbody>
 	</table>
 	<br/>
-	<h3>Current Bookings</h3>
+@endif
+		
+@if ($reservations)
+	<h3>Current Reservations</h3>
 	<table class="table table-bordered table-striped">
 	  <thead>
 	    <tr>
@@ -45,49 +56,33 @@
 	    </tr>
 	  </thead>
 	  <tbody>
-	  	<% @reservations2.each do |reg|
-	  		if Reservation.where(:id => reg.reservation_id).count > 0
-		  		event = Reservation.find(reg.reservation_id)
-	  	%>
+			@foreach ($reservations as $reservation)
 	    <tr>
-	    	<td style="width: 120px;"><b><a href="/reserve/<%= event.id %>"><%= event.title %></a></b></td>
+	    	<td style="width: 120px;"><b><a href="{{ route('check-date-for-reservation', [$reservation->reservation_slot]) }}">{{$reservation->reservation_slot->title}}</a></b></td>
 	      <td>
-	      	<p><%= event.description%></p>
-	      	<p><%= reg.time.strftime('%A %B %d, %Y') %> at <%= reg.time.strftime('%I:%M %p') %><br/>
-	      	Length: <%= reg.length %> minutes</p>
+					<p>User: <a href="{{route('edit-user', $reservation->user)}}">{{$reservation->user->name }}</a></p>
+	      	<p>{{$reservation->reservation_slot->description}}</p>
+					@if ($reservation->for_event)
+					<p>This reservation is attached to an <a href="{{route('show-event', [$reservation->event] )}}">event.</a></p>
+					@endif
+	      	<p>{{ date("l F j, Y", strtotime($reservation->start_time)) }} at {{ date("g:i A", strtotime($reservation->start_time)) }}<br/>
+	      	Length: {{$reservation->duration()}} minutes</p>
 	      </td>
-	      <td style="width: 270px;"><%= link_to "Cancel Booking", booking_path(reg.id), :confirm => "Are you sure you want to DELETE this reservation?", :method => :delete, :class => "btn btn-danger pull-right" %></td>
+	      <td style="width: 270px;">
+					@if ($reservation->for_event)
+						<a href="{{route('destroy-reservation', $reservation)}}" confirm="This reservation is attached to an event. Deleting this reservation will also delete the event and cancel all registrations." class="btn btn-danger pull-right">Cancel Reservation</a>
+					@else 
+						<a href="{{route('destroy-reservation', $reservation)}}" confirm="Are you sure you want to DELETE this reservation?" class="btn btn-danger pull-right">Cancel Reservation</a>
+					@endif
+				</td>
 	    </tr>
-	    <% end end %>
+	    @endforeach
 	  </tbody>
 	</table>
-	
-<% elsif current_user.admin? %>
-
-	<%= link_to "Create New Resource", new_reservation_path, :class => "btn btn-success", :style => "margin-right: 9px;" %>
-	<br/><br/>
-	<table class="table table-bordered table-striped">
-	  <thead>
-	    <tr>
-	    	<th>Resource</th>
-	      <th>Description/Location</th>
-	      <th>Notification Emails</th>
-	    </tr>
-	  </thead>
-	  <tbody>
-	  	<% @reservations.each do |event| %>
-	    <tr>
-	    	<td style="width: 120px;"><b><a href="/reserve/<%= event.id %>"><%= event.title %></a></b></td>
-	      <td>
-	      	<p><%= event.description%></p>
-	      </td>
-	      <td style="width: 270px;"><%= event.email_2 %><br/><br/><%= event.email_1 %></td>
-	    </tr>
-	    <% end %>
-	  </tbody>
-	</table>
-	<br/>
-	<h3>Resources You've Booked</h3>
+@endif
+		
+@if ($your_reservations)
+	<h3>Your Reservations</h3>
 	<table class="table table-bordered table-striped">
 	  <thead>
 	    <tr>
@@ -97,51 +92,28 @@
 	    </tr>
 	  </thead>
 	  <tbody>
-	  	<% @reservations2.each do |reg| 
-		  	event = Reservation.find(reg.reservation_id)
-	  	%>
+			@foreach ($your_reservations as $reservation)
 	    <tr>
-	    	<td style="width: 120px;"><b><a href="/reserve/<%= event.id %>"><%= event.title %></a></b></td>
+	    	<td style="width: 120px;"><b><a href="{{ route('check-date-for-reservation', [$reservation->reservation_slot]) }}">{{$reservation->reservation_slot->title}}</a></b></td>
 	      <td>
-	      	<p><%= event.description%></p>
-	      	<p><%= reg.time.strftime('%A %B %d, %Y') %> at <%= reg.time.strftime('%I:%M %p') %><br/>
-	      	Length: <%= reg.length %> minutes</p>
+	      	<p>{{$reservation->reservation_slot->description}}</p>
+					@if ($reservation->for_event)
+					<p>This reservation is attached to an <a href="{{route('show-event', [$reservation->event] )}}">event.</a></p>
+					@endif
+	      	<p>{{ date("l F j, Y", strtotime($reservation->start_time)) }} at {{ date("g:i A", strtotime($reservation->start_time)) }}<br/>
+	      	Length: {{$reservation->duration()}} minutes</p>
 	      </td>
-	      <td style="width: 270px;"><%= link_to "Cancel Reservation", booking_path(reg.id), :confirm => "Are you sure you want to DELETE this reservation?", :method => :delete, :class => "btn btn-danger pull-right" %></td>
+	      <td style="width: 270px;">
+					@if ($reservation->for_event)
+						<a href="{{route('destroy-reservation', $reservation)}}" confirm="This reservation is attached to an event. Deleting this reservation will also delete the event and cancel all registrations." class="btn btn-danger pull-right">Cancel Reservation</a>
+					@else
+						<a href="{{route('destroy-reservation', $reservation)}}" confirm="Are you sure you want to DELETE this reservation?" class="btn btn-danger pull-right">Cancel Reservation</a>
+					@endif
+				</td>
 	    </tr>
-	    <% end %>
+	    @endforeach
 	  </tbody>
 	</table>
-	
-<% else %>
-
-	<br/>
-	<table class="table table-bordered table-striped">
-	  <thead>
-	    <tr>
-	    	<th>Resource/Room</th>
-	      <th>Reservation Details</th>
-	      <th>Cancel Reservation</th>
-	    </tr>
-	  </thead>
-	  <tbody>
-	  	<% @reservations.each do |reg| 
-		  	reservation = Reservation.find(reg.reservation_id)
-	  	%>
-	    <tr>
-	    	<td style="width: 120px;"><b><a href="/reserve/<%= reservation.id %>"><%= reservation.title %></a></b></td>
-	      <td>
-	      	<p><%= reservation.description%></p>
-	      	<p><%= reg.time.strftime('%A %B %d, %Y') %> at <%= reg.time.strftime('%I:%M %p') %><br/>
-	      	Length: <%= reg.length %> minutes</p>
-	      	<p></p>
-	      </td>
-	      <td style="width: 270px;"><%= link_to "Cancel Reservation", booking_path(reg.id), :confirm => "Are you sure you want to DELETE this reservation?", :method => :delete, :class => "btn btn-danger pull-right" %></td>
-	    </tr>
-	    <% end %>
-	  </tbody>
-	</table>
-	
-<% end %>
+@endif
 </div>
 @endsection

@@ -13,9 +13,20 @@ class CreateEventsTable extends Migration
      */
     public function up()
     {
+        Schema::enableForeignKeyConstraints();
         Schema::create('events', function (Blueprint $table) {
             $table->increments('id');
+            $table->integer('reservation_id');
+            $table->integer('user_id');
+            $table->integer('registration_window')->nullable();
+            $table->string('name');
+            $table->string('description');
+            $table->string('fee')->nullable();
+            $table->string('notification_email');
+            $table->boolean('public');
+            $table->integer('available_spots');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

@@ -18,8 +18,8 @@ class CreateLocationTable extends Migration
             $table->string('title');
             $table->string('description');
             $table->string('manager_email');
-            $table->integer('user_id');
             $table->timestamps();
+            $table->softDeletes();
         });
     }
 

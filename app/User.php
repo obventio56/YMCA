@@ -5,6 +5,7 @@ namespace App;
 use Illuminate\Notifications\Notifiable;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Event;
 
 class User extends Authenticatable
 {
@@ -16,7 +17,7 @@ class User extends Authenticatable
      * @var array
      */
     protected $fillable = [
-        'name', 'email', 'password', 'role', 'active_user',
+        'name', 'email', 'password', 'role', 'suspended',
     ];
 
   
@@ -30,6 +31,34 @@ class User extends Authenticatable
      *
      * @var array
      */
+  
+    public function reservations()
+    {
+      return $this->hasMany('App\Reservation');
+    }
+  
+    public function events()
+    {
+      return $this->hasMany('App\Event');
+    }
+  
+    public function registrations()
+    {
+      return $this->hasMany('App\Registration');
+    }
+  
+    public function reservation_slots()
+    {
+      return $this->hasMany('App\ReservationSlot');
+    }
+  
+    public function registered(Event $event) {
+      if ($this->registrations->where('event_id', $event->id)->count() > 0) {
+        return true;
+      }
+      return false;
+    } 
+  
     protected $hidden = [
         'password', 'remember_token',
     ];
