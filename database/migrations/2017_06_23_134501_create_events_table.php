@@ -23,7 +23,7 @@ class CreateEventsTable extends Migration
             $table->string('description');
             $table->string('fee')->nullable();
             $table->string('notification_email');
-            $table->boolean('public');
+            $table->boolean('public')->default(false);
             $table->integer('available_spots');
             $table->timestamps();
             $table->softDeletes();

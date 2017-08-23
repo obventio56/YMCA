@@ -13,6 +13,14 @@
 	  @foreach($reservations as $reservation)
       {
             "name": "{{$reservation->reservation_slot->title}}",
+						"color":
+						@if($reservation->for_event)
+						"1",
+						@elseif($reservation->public)
+						"4",
+						@else 
+						"2",
+						@endif
             "day":"{{ date('j', strtotime($reservation->start_time)) }}",
 						"month":"{{ date('n', strtotime($reservation->start_time)) }}",
 						"year":"{{ date('o', strtotime($reservation->start_time)) }}",

@@ -4,7 +4,7 @@
 @section("content")
 <div class="container">
 	<h3>Edit {{$reservation_slot->title}}</h3>
-	<p>Enter the details for this resource below.</p>
+	<p>Enter the details for this reservation slot below.</p>
   
 	<form id="create-reservation-slot" action="{{route('update-reservation-slot', [$reservation_slot])}}" class="well" method="POST">
 		{{ csrf_field() }}
@@ -70,6 +70,12 @@
 				<input value="{{$reservation_slot->max_time}}" type="text" name="max_time"><br/><br/>
 				<label>Advanced Reservation Window (in days)</label>
 				<input value="{{$reservation_slot->reservation_window}}" type="text" name="reservation_window"><br/><br/>
+				<label>Is this reservation slot public?</label>
+				<input type="checkbox" name="public"
+							 @if ($reservation_slot->public)
+								checked
+							 @endif
+							 /><br/><br/>
 				<label>Groups</label>
 				<select name="groups[]" multiple>
 					@foreach ($reservation_slot_groups as $reservation_slot_group)
@@ -80,11 +86,11 @@
 										>{{$reservation_slot_group->title}}</option>
 					@endforeach
 				</select><br/><br/>
-				<label>Resource Notes & Facility Requirements</label>
+				<label>Reservation Slot Notes & Facility Requirements</label>
 				<textarea col="60" rows="12" name="notes">{{$reservation_slot->notes}}</textarea><br/><br/>
 			</div>
 			<div class="span12">
-				<br/><br/><input class="btn btn-success" type="submit" value="Update Resource"/>
+				<br/><br/><input class="btn btn-success" type="submit" value="Update Reservation Slot"/>
 			</div>
 		</div>	  
   </form>

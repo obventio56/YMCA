@@ -29,9 +29,24 @@ class UserController extends Controller
           "staff" => [1],
           "admin" => [2]
         );
-      
-        $this->middleware('auth');
-    } 
+    }
+  
+    public function set_password_form(User $user) {
+      return view('users.set-password-form', ['user' => $user]);
+    }
+  
+    public function set_password(User $user, Request $request) {
+      $validator = $this->update_password_rules($request->all());
+      if ($validator->fails()) {
+        return Redirect::back()
+              ->withErrors($validator) 
+              ->withInput();
+      } else {
+        $user->password = bcrypt($request->all()['password']);
+        $user->save();
+      }       
+      return redirect()->route('login');
+    }
   
     public function update_password_rules(array $data)
     {
@@ -79,10 +94,10 @@ class UserController extends Controller
     {
       if (Gate::allows('manipulate-user', $user)) {
 
-        $updated_values = array_filter($request->all()); //array_filter removes null indecies
+        $updated_values = $request->all();
 
         //if the password is being updated, ensure it meets requirements and bycript it
-        if (array_key_exists("password", $updated_values)) {
+        if (!is_null($updated_values["password"])) {
           $validator = $this->update_password_rules($updated_values);
           if ($validator->fails()) {
             return Redirect::back()
@@ -102,9 +117,10 @@ class UserController extends Controller
                   ->withErrors($validator) // send back all errors to the login form
                   ->withInput();
           }
+          $user->role = $updated_values["role"];
         }
-
-        $user->update($updated_values);
+        
+        $user->update( array_filter($updated_values)); //array_filter removes null password
         
         //sorry this is gross, don't know a better way to do it...
         //it is protected by auth.

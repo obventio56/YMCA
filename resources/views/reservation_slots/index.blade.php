@@ -6,7 +6,7 @@
 	<p>You'll find all reservation slots that are available to reserve listed below.</p>
 	
 @if (Auth::user()->role == 2 || Auth::user()->role == 1)
-	<a class="btn btn-success" style="margin-right: 9px;" href="{{ route('new-reservation-slot') }}" >Create New Resource</a>
+	<a class="btn btn-success" style="margin-right: 9px;" href="{{ route('new-reservation-slot') }}" >Create New Reservation Slot</a>
 @endif
 	
 @if (Auth::user()->role == 2)
@@ -19,7 +19,7 @@
 	<table class="table table-bordered table-striped">
 	  <thead>
 	    <tr>
-	    	<th>Resource</th>
+	    	<th>Reservation Slot</th>
 	      <th>Description/Location</th>
 	      <th>Primary Email</th>
 	      <th>Actions</th>
@@ -31,13 +31,13 @@
 	    	<td style="width: 120px;"><b><a href="{{route('check-date-for-reservation', [$reservation_slot])}}">{{$reservation_slot->title}}</a></b></td>
 	      <td>
 	      	<p>{{$reservation_slot->description}}</p>
-	      	<p>Copy and paste the following URL anywhere that you need to link to registration for this resource:<br/><br/>
+	      	<p>Copy and paste the following URL anywhere that you need to link to registration for this reservation slot:<br/><br/>
 		      	<span style="color: #ff0000;">{{route('check-date-for-reservation', [$reservation_slot])}}</span>
 	      	</p>
 	      </td>
 	      <td>{{$reservation_slot->primary_email}}<br/><br/>{{str_replace(",", "\n", $reservation_slot->notification_emails)}}</td>
-				<td style="width: 270px;"><a class="btn btn-danger pull-right" href="{{route("destroy-reservation-slot", [$reservation_slot])}}">Delete Resource</a>
-					<a class="btn btn-info pull-right" style="margin-right: 9px;" href="{{route("edit-reservation-slot", [$reservation_slot])}}">Edit Resource</a>
+				<td style="width: 270px;"><a class="btn btn-danger pull-right" href="{{route("destroy-reservation-slot", [$reservation_slot])}}">Delete Reservation Slot</a>
+					<a class="btn btn-info pull-right" style="margin-right: 9px;" href="{{route("edit-reservation-slot", [$reservation_slot])}}">Edit Reservation Slot</a>
 	    </tr>
 	    @endforeach
 	  </tbody>
@@ -50,7 +50,7 @@
 	<table class="table table-bordered table-striped">
 	  <thead>
 	    <tr>
-	    	<th>Resource/Room</th>
+	    	<th>Reservation Slot/Room</th>
 	      <th>Reservation Details</th>
 	      <th>Cancel Registration</th>
 	    </tr>
@@ -86,7 +86,7 @@
 	<table class="table table-bordered table-striped">
 	  <thead>
 	    <tr>
-	    	<th>Resource/Room</th>
+	    	<th>Reservation Slot/Room</th>
 	      <th>Reservation Details</th>
 	      <th>Cancel Registration</th>
 	    </tr>

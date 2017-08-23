@@ -28,8 +28,12 @@ class ReservationController extends Controller
   
   public function check_date(ReservationSlot $reservation_slot) {
     $hours_of_operation = json_decode($reservation_slot->hours_of_operation);
+    $max_time = $this->convertToHoursMins($reservation_slot->max_time);
+    $min_time = $this->convertToHoursMins($reservation_slot->time_interval);
     return view('reservations.pick-date', ["reservation_slot" => $reservation_slot,
-                                           "hours_of_operation" => $hours_of_operation]);
+                                           "hours_of_operation" => $hours_of_operation,
+                                            "max_time" => $max_time,
+                                            "min_time" => $min_time]);
   }
   
   public function check_time(Request $request, ReservationSlot $reservation_slot) {
@@ -70,7 +74,8 @@ class ReservationController extends Controller
     $reservation_slot = ReservationSlot::find($request->reservation_slot_id);
     $start_time = strtotime($request->start_time);
     $end_time = $start_time + intval($request->length)*60;
-    $time_validation = Reservation::validate_reservation_time($reservation_slot, $start_time, $end_time);
+    $admin = Auth::user()->role == 2;
+    $time_validation = Reservation::validate_reservation_time($reservation_slot, $start_time, $end_time, $admin);
     if ($time_validation) {
       return $time_validation;
     }
@@ -159,15 +164,25 @@ class ReservationController extends Controller
     return $available_durations;
   }
   
+  
+  //making grammar with if statements lol english sux
   function convertToHoursMins($time) {
     $hours = floor($time / 60);
     $minutes = ($time % 60);
     if ($hours > 0 && $minutes > 0) {
-      return $hours . " Hours, and " . $minutes . " Minutes";
+      if ($hours > 1) {
+        return $hours . " hours, and " . $minutes . " minutes";
+      } else {
+        return $hours . " hour, and " . $minutes . " minutes";
+      }  
     } elseif ($minutes < 1) {
-      return $hours . " Hours";
+      if ($hours > 1) {
+        return $hours . " hours";
+      } else {
+        return $hours . " hour";
+      }
     } else {
-      return $minutes . " Minutes";
+      return $minutes . " minutes";
     }
   }
   

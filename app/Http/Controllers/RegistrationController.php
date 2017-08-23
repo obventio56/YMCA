@@ -11,7 +11,7 @@ use Illuminate\Support\Facades\Gate;
 
 use Illuminate\Support\Facades\Mail;
 use App\Mail\RegistrationConfirmation;
-use App\Mail\RegistraitonAdminNotificaiton;
+use App\Mail\RegistrationAdminNotification;
 
 class RegistrationController extends Controller
 {
@@ -33,7 +33,7 @@ class RegistrationController extends Controller
     
     //send mail
     Mail::to($registration->user)->send(new RegistrationConfirmation($registration));
-    Mail::to($registraiton->event->notification_email)->send(new RegistraitonAdminNotificaiton($registration));
+    Mail::to($registration->event->notification_email)->send(new RegistrationAdminNotification($registration));
     
     return redirect()->route('show-event', [$event]);
   }

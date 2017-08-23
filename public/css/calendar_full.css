@@ -25,7 +25,7 @@
 }
 .tiva-calendar-full .calendar-title , .tiva-calendar-full .calendar-btn {
 	text-align: center !important;
-	background: #5AA4A3;
+	background: #0089d0;
 	color: #ffffff;
 	height: 30px;
 	vertical-align: middle !important;
@@ -57,7 +57,7 @@
 }
 .tiva-calendar-full .calendar-table tr th {
 	text-align: center;
-	color: #5AA4A3;
+	color: #0089d0;
 	background: #eeeeee;
 	font-size: 14px;
 }
@@ -178,7 +178,7 @@
 }
 .tiva-event-list-full .event-name {
 	font-size: 17px;
-	color: #5AA4A3;
+	color: #0089d0;
 	margin-bottom: 4px;
 }
 .tiva-event-list-full .event-time, .tiva-event-list-full .event-date {
@@ -213,7 +213,7 @@
 }
 .tiva-event-detail-full .event-name {
 	font-size: 22px;
-    color: #5AA4A3;
+    color: #0089d0;
     margin-bottom: 15px;
 }
 .tiva-event-detail-full .event-time, .tiva-event-detail-full .event-date, .tiva-event-detail-full .event-location {
@@ -242,7 +242,7 @@
 }
 .tiva-event-detail-full .event-link a {
 	color: #fff;
-    background: #5AA4A3;
+    background: #0089d0;
     padding: 8px 10px 8px 10px;
     -moz-border-radius: 3px;
     -webkit-border-radius: 3px;

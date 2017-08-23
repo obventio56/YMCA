@@ -3,8 +3,8 @@
 
 @section("content")
 <div class="container">
-	<h3>Create A New Resource for Reservation</h3>
-	<p>Enter the details for this resource below.</p>
+	<h3>Create A New Reservation Slot for Reservation</h3>
+	<p>Enter the details for this reservation below.</p>
   
 	<form id="create-reservation-slot" action="{{route('create-reservation-slot')}}" class="well" method="POST">
 		{{ csrf_field() }}
@@ -59,17 +59,19 @@
 				<input value="{{ old('max_time') }}" type="text" name="max_time"><br/><br/>
 				<label>Advanced Reservation Window (in days)</label>
 				<input value="{{ old('reservation_window') }}" type="text" name="reservation_window"><br/><br/>
+				<label>Is this reservation slot public?</label>
+				<input type="checkbox" name="public"><br/><br/>
 				<label>Groups</label>
 				<select name="groups[]" multiple>
 					@foreach ($reservation_slot_groups as $reservation_slot_group)
 						<option value="{{$reservation_slot_group->id}}">{{$reservation_slot_group->title}}</option>
 					@endforeach
 				</select><br/><br/>
-				<label>Resource Notes & Facility Requirements</label>
+				<label>Reservation Slot Notes & Facility Requirements</label>
 				<textarea col="60" rows="12" name="notes">{{ old('notes') }}</textarea><br/><br/>
 			</div>
 			<div class="span12">
-				<br/><br/><input class="btn btn-success" type="submit" value="Create New Resource"/>
+				<br/><br/><input class="btn btn-success" type="submit" value="Create New Reservation Slot"/>
 			</div>
 		</div>	  
   </form>

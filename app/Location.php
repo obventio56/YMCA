@@ -16,6 +16,11 @@ class Location extends Model
         return $this->belongsTo('App\User');
     }
   
+    public function reservation_slots()
+    {
+        return $this->hasMany('App\ReservationSlot');
+    }
+  
     public function custom_destroy() {
       foreach ($this->reservation_slots as $reservation_slot) {
         $reservation_slot->custom_destroy();

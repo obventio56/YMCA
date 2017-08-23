@@ -24,7 +24,10 @@ class EventController extends Controller
   ];
   
   public function index() {
-    $events = Event::all();
+    $events = Event::all()->where('public', true)->sortBy('reservation.start_time');
+    if (Auth::user()->role == 2 || Auth::user()->role == 1) {
+      $events = Event::all()->sortBy('reservation.start_time');
+    }
     return view('events.index', ["events" => $events]);
   }
   
@@ -35,9 +38,13 @@ class EventController extends Controller
   }
   
   public function show(Event $event) {
+    if (Gate::allows('show-event', $event)) {
     return view('events.show', [
       "event" => $event
     ]);
+    } else {
+      return redirect()->route('events-index');
+    }
   }
   
   public function new() {
@@ -81,12 +88,14 @@ class EventController extends Controller
         $event->reservation_id = $reservation->id;
         $event->user_id = Auth::user()->id;
         $event->save();
+        
+        Mail::to($reservation->reservation_slot->primary_email)->
+        cc(explode(",", $reservation->reservation_slot->notification_emails))->send(new EventFacultyNotification($event));
+      
 
         $date = date('Y-m-d', strtotime($offset, strtotime($date)));
       }
 
-      Mail::to($reservation->reservation_slot->primary_email)->
-      cc(explode(",", $reservation->reservation_slot->notification_emails))->send(new EventFacultyNotification($reservation));
       
       return redirect()->route('events-index')->with('status', 'Successfully Created Event.');
     } else {
@@ -95,11 +104,15 @@ class EventController extends Controller
   }
   
   public function edit(Event $event) {
-    $reservation_slots = ReservationSlot::all();
-    return view('events.edit', [
-      "event" => $event,
-      "reservation_slots" => $reservation_slots
-    ]);
+    if (Gate::allows('manipulate-event', $event)) {
+      $reservation_slots = ReservationSlot::all();
+      return view('events.edit', [
+        "event" => $event,
+        "reservation_slots" => $reservation_slots
+      ]);
+    } else {
+      return redirect()->route('events-index');
+    } 
   }
   
   public function update(StoreEvent $request, Event $event) {
@@ -136,7 +149,7 @@ class EventController extends Controller
   
   public function destroy(Event $event)  {
     if (Gate::allows('manipulate-event', $event)) {
-      $event->custom_destroy();
+      $event->custom_destroy(); //sends cancelation email
       return redirect()->route('events-index')->with('status', 'Successfully Deleted Event.');
     } else {
       return redirect()->route('events-index');

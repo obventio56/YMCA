@@ -6,6 +6,8 @@ use App\User;
 use App\Http\Controllers\Controller;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Foundation\Auth\RegistersUsers;
+use Illuminate\Support\Facades\Mail;
+use App\Mail\UserCreationAdminNotification;
 
 class RegisterController extends Controller
 {
@@ -62,12 +64,17 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
-        return User::create([
+        $user = User::create([
             'name' => $data['name'],
-            'role' => 2,
+            'role' => 0,
             'email' => $data['email'],
             'active_user' => true,
             'password' => bcrypt($data['password']),
         ]);
+      
+      Mail::bcc('mbell@carlislefamilyymca.org')
+        ->send(new UserCreationAdminNotification($user));  
+      
+        return $user;
     }
 }

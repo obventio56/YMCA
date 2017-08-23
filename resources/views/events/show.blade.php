@@ -19,13 +19,13 @@
 				@if (Auth::user()->registered($event))
 					<p>You're registered for this event!</p>
 					<a href="{{ route('events-index') }}" class="btn">View Your Events To Manage This Registration</a>
-				@elseif (!$event->full())
-					<p>This event is open for up to {{$event->remaining_spots() }} more participants</p>
-					<a href="{{route('create-registration', [$event])}}" class="btn">Register Now For This Event</a>
-				@elseif (!$event->open_for_registration())
+				@elseif ($event->full())
+					<p>We're sorry, but this class already is full. You are welcome to stop by in case someone does not show up, but we cannot guarantee you will have a spot.</p>
+				@elseif (!$event->open_to_register())
 					<p>This event is open for up to {{$event->remaining_spots() }} more participants, but registration is only available within {{$event->registration_window}} days of the event. Please return then to register.</p>
 				@else
-					<p>We're sorry, but this class already is full. You are welcome to stop by in case someone does not show up, but we cannot guarantee you will have a spot.</p>
+					<p>This event is open for up to {{$event->remaining_spots() }} more participants</p>
+					<a href="{{route('create-registration', [$event])}}" class="btn">Register Now For This Event</a>
 				@endif
 				</div>
 				

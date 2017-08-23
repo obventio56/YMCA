@@ -27,11 +27,13 @@
 	          <ul class="nav pull-right">
 	            @if (Auth::guest())
 	            <li><a href="{{ route('login') }}">Sign In</a></li>
+							<li><a href="{{ route('register') }}">Sign Up</a></li>
 							@else
 								@if (Auth::user()->role == 2)
 									<li><a href="{{route('events-index')}}">Events & Classes</a></li>
 		            	<li><a href="{{route('reservation-slots-index')}}">Reservations</a></li>
 		            	<li><a href="{{route('locations-index')}}">Locations</a></li>
+									<li><a href="{{route('users-index', ["admin"])}}">Admins</a></li>
 		            	<li><a href="{{route('users-index', ["staff"])}}">Staff</a></li>
 		            	<li><a href="{{route('users-index')}}">Members</a></li>
 								@elseif (Auth::user()->role == 1)
@@ -88,7 +90,12 @@
 			</div>
 			@endif
 		</div>
-		<a href="javascript:window.print()">Print</a>
+		<!--
+		@if (Auth::user())
+			<a href="{{ URL::previous() }}" class="btn"><i class="icon-arrow-left" aria-hidden="true"></i> Go Back</a><br><br>
+		@endif
+		-->
+		<a href="javascript:window.print()">Print</a><br><br>
 		@yield('content')
 	</div>
   <script src="{{ asset('js/app.js') }}"></script> 

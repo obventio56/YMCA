@@ -26,6 +26,7 @@ class CreateReservationSlotsTable extends Migration
             $table->string('hours_of_operation');
             $table->string('notes')->nullable();
             $table->string('title');
+            $table->boolean('public')->default(false);
             $table->timestamps();
             $table->softDeletes();
             $table->foreign('location_id')->references('id')->on('locations')->onDelete('cascade');

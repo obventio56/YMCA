@@ -15,8 +15,8 @@ return [
     */
 
     'mailgun' => [
-        'domain' => env('MAILGUN_DOMAIN'),
-        'secret' => env('MAILGUN_SECRET'),
+        'domain' => 'mg.agarwelding.com',
+        'secret' => 'key-670b36f6d0ba754a628a9337c28aa147',
     ],
 
     'ses' => [

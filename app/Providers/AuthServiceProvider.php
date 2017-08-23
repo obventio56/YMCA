@@ -6,6 +6,8 @@ use Illuminate\Support\Facades\Gate;
 use Illuminate\Foundation\Support\Providers\AuthServiceProvider as ServiceProvider;
 use Illuminate\Support\Facades\Auth;
 use App\Reservation;
+use App\ReservationSlot;
+
 use App\Event;
 use App\Registration;
 
@@ -40,7 +42,7 @@ class AuthServiceProvider extends ServiceProvider
         //user gates
         Gate::define('manipulate-user', function ($current_user, $user) {
           
-          return ($current_user->role == 1 || $current_user->role == 2 || $current_user.id == $user->id) && !$current_user->suspended;
+          return ($current_user->role == 1 || $current_user->role == 2 || $current_user->id == $user->id) && !$current_user->suspended;
         });
       
         Gate::define('users-index', function ($user) {
@@ -53,8 +55,12 @@ class AuthServiceProvider extends ServiceProvider
         });
   
         //reservation slot gates
-        Gate::define('manipulate-reservation-slot', function ($user) {
-          return ($user->role == 2) && !$user->suspended;
+        Gate::define('manipulate-reservation-slot', function ($user, ReservationSlot $reservation_slot) {
+          return ($user->role == 2 || ($user->role == 1 && $reservation_slot->user == $user)) && !$user->suspended;
+        });
+      
+        Gate::define('create-reservation-slot', function ($user) {
+          return ($user->role == 2 || $user->role == 1) && !$user->suspended;
         });
    
         //reservation gates
@@ -73,6 +79,10 @@ class AuthServiceProvider extends ServiceProvider
       
         Gate::define('manipulate-event', function ($user, Event $event) {
           return ($user->role == 2 || $user->id == $event->user->id) && !$user->suspended;
+        });
+      
+        Gate::define('show-event', function ($user, Event $event) {
+          return ($user->role == 2 || $user->role == 1 || $event->public) && !$user->suspended;
         });
       
         //registration gates      

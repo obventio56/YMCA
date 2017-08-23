@@ -18,7 +18,7 @@
 	margin-top: 20px;
 }
 .events-calendar-bar .bar-btn.active {
-	background: #5AA4A3;
+	background: #0089d0;
 }
 .events-calendar-bar .bar-btn {
 	color: #fff;
@@ -36,7 +36,7 @@
 	position: relative;
 }
 .events-calendar-bar .bar-btn:hover {
-	background: #5AA4A3;
+	background: #0089d0;
 }
 .events-calendar-bar .back-calendar {
 	padding: 3px 10px 3px 22px;
@@ -149,7 +149,7 @@
 	font-size: 15px;
 	line-height: 20px;
 	margin-bottom: 6px;
-	color: #5AA4A3;
+	color: #0089d0;
 }
 .calendar-day-event .tiva-event-tooltip .event-image  img {
 	width: 100%;
@@ -159,3 +159,4 @@
 .calendar-day-event .tiva-event-tooltip .event-intro {
 	font-size: 14px;
 }
+

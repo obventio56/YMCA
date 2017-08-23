@@ -10,7 +10,7 @@ class ReservationSlot extends Model
 {
   use SoftDeletes;
   
-  protected $fillable = ['title', 'description', 'primary_email', 'notification_emails', 'time_interval', 'max_time', 'reservation_window', 'notes'];
+  protected $fillable = ['location_id', 'title', 'description', 'primary_email', 'notification_emails', 'time_interval', 'max_time', 'reservation_window', 'notes', 'public'];
 
   //I don't know if this is bad form but I'm going to do it anyways:
   

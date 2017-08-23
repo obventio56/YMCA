@@ -13,7 +13,7 @@
         <input type="text" name="name" value="{{$event->name}}"/><br/><br/>
 				<label>Description</label>
         <textarea name="description" cols="60" rows="12" >{{$event->description}}</textarea><br/><br/>
-        <label>Fee</label>
+        <label>Fee (ex: $25.00)</label>
         <input type="text" name="fee" value="{{$event->fee}}"/><br/><br/>
 				
         <label>Email Address for Notifications</label>

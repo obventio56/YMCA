@@ -14,7 +14,7 @@
     <textarea cols="60" rows="12" name="description">{{$location->description}}</textarea>
     <label>Manager email</label>
     <input value="{{$location->manager_email}}" type="email" name="manager_email"/><br><br>
-    <input class="btn btn-success" type="submit" value="Create New Location">
+    <input class="btn btn-success" type="submit" value="Update Location">
   </form>
 
 </div>

@@ -3,7 +3,6 @@
 
 @section("content")
 
-		<a href="javascript:window.print()">Print</a>
 			<h2>Here Are The Available Slots For {{$reservation_slot->title}} on {{date('l, n/j/Y', $date)}}</h2>
 	<p>Click on the desired start time of your reservation. We'll have you choose the duration of your reservation next.</p>
 	<hr>

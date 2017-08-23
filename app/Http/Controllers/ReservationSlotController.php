@@ -47,9 +47,9 @@ class ReservationSlotController extends Controller
     }
   
     public function create(StoreReservationSlot $request) {
-      if (Gate::allows('manipulate-reservation-slot')) {
+      if (Gate::allows('create-reservation-slot')) {
         $reservation_slot = new ReservationSlot() ;
-        $reservation_slot->fill($request->all());
+        $reservation_slot->fill($request->all());     
         $reservation_slot->hours_of_operation = json_encode($request->hours_of_operation);
         $reservation_slot->user_id = Auth::user()->id;
         $reservation_slot->location_id = intval($request->location_id);
@@ -63,7 +63,7 @@ class ReservationSlotController extends Controller
     }
   
     public function edit(ReservationSlot $reservation_slot) {
-      if (Gate::allows('manipulate-reservation-slot')) {
+      if (Gate::allows('manipulate-reservation-slot', $reservation_slot)) {
         $locations = Location::all();
         $reservation_slot_groups = ReservationSlotGroup::all();
         $hours_of_operation = json_decode($reservation_slot->hours_of_operation); //db doesn't autoparse json
@@ -77,20 +77,20 @@ class ReservationSlotController extends Controller
     }
   
     public function update(StoreReservationSlot $request, ReservationSlot $reservation_slot) {
-      if (Gate::allows('manipulate-reservation-slot')) {
+      if (Gate::allows('manipulate-reservation-slot', $reservation_slot)) {
         $reservation_slot->fill($request->all());
         $reservation_slot->hours_of_operation = json_encode($request->hours_of_operation);
         $reservation_slot->reservation_slot_groups()->sync($request->groups);
         $reservation_slot->save();
 
-        return redirect()->route('edit-reservation-slot', $reservation_slot);
+        return redirect()->route('reservation-slots-index');
        } else {
         return redirect()->route('events-index')->with('warning', 'You are not authorized to complete that action');
       }
     }
   
     public function destroy(ReservationSlot $reservation_slot) {
-      if (Gate::allows('manipulate-reservation-slot')) {
+      if (Gate::allows('manipulate-reservation-slot', $reservation_slot)) {
         $reservation_slot->custom_destroy();
         return redirect()->route('reservation-slots-index');
       } else {

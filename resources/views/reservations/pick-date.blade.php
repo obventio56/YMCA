@@ -4,25 +4,25 @@
 <h2>{{$reservation_slot->title}}</h2>
 <p>{{$reservation_slot->description}}</p>
 <hr/>
-<p>Please note that you can book a <b>minimum of {{$reservation_slot->time_interval}} minutes</b> and a <b>maximum of {{$reservation_slot->max_time}} minutes</b> with {{$reservation_slot->title}}.</p><br/>
+<p>Please note that you can book a <b>minimum of {{$min_time}}</b> and a <b>maximum of {{$max_time}}</b> with {{$reservation_slot->title}}.</p><br/>
 <table class="span12">
 	<tr>
-		<th style="text-align: left;">Monday</th>
-		<th style="text-align: left;">Tuesday</th>
-		<th style="text-align: left;">Wednesday</th>
-		<th style="text-align: left;">Thursday</th>
-		<th style="text-align: left;">Friday</th>
-		<th style="text-align: left;">Saturday</th>
-		<th style="text-align: left;">Sunday</th>
+		@foreach ($hours_of_operation as $day => $value)
+			@if (!is_null($value->open))
+				<th style="text-align: left;">{{ ucwords($day) }}</th>
+			@endif
+		@endforeach
 	</tr>
 	<tr>
-		<td><p style="font-size: 10px;">{{$hours_of_operation->monday->open}} - {{$hours_of_operation->monday->close}}</p></td>
-		<td><p style="font-size: 10px;">{{$hours_of_operation->tuesday->open}} - {{$hours_of_operation->tuesday->close}}</p></td>
-		<td><p style="font-size: 10px;">{{$hours_of_operation->wednesday->open}} - {{$hours_of_operation->wednesday->close}}</p></td>
-		<td><p style="font-size: 10px;">{{$hours_of_operation->thursday->open}} - {{$hours_of_operation->thursday->close}}</p></td>
-		<td><p style="font-size: 10px;">{{$hours_of_operation->friday->open}} - {{$hours_of_operation->friday->close}}</p></td>
-		<td><p style="font-size: 10px;">{{$hours_of_operation->saturday->open}} - {{$hours_of_operation->saturday->close}}</p></td>
-		<td><p style="font-size: 10px;">{{$hours_of_operation->sunday->open}} - {{$hours_of_operation->sunday->close}}</p></td>
+		@foreach ($hours_of_operation as $day => $value)
+			@if (!is_null($value->open))
+				<td>
+					<p style="font-size: 10px;">
+						{{$value->open}} - {{$value->close}}
+					</p>
+				</td>
+			@endif
+		@endforeach
 	</tr>
 </table>
 <br/><br/><br/><br/>
