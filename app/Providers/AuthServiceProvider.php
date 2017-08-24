@@ -45,6 +45,11 @@ class AuthServiceProvider extends ServiceProvider
           return ($current_user->role == 1 || $current_user->role == 2 || $current_user->id == $user->id) && !$current_user->suspended;
         });
       
+        Gate::define('delete-user', function ($current_user, $user) {
+          
+          return (($current_user->role == 2 && $current_user->id != $user->id) || ($current_user->role != 2 && $current_user->id == $user->id)) && !$current_user->suspended;
+        });
+      
         Gate::define('users-index', function ($user) {
           return ($user->role == 1 || $user->role == 2) && !$user->suspended;
         });

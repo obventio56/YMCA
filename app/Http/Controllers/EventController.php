@@ -15,7 +15,8 @@ use App\Mail\EventFacultyNotification;
 
 class EventController extends Controller
 {
-  
+ 
+  //for recurring events I need to convert english to strtotime intervals
   var $offset_lookup = [
     "day" => "+1 day",
     "week" => "+1 week",
@@ -81,16 +82,23 @@ class EventController extends Controller
         $reservation->end_time = date("Y-m-d H:i:s", $end_time);
         $reservation->for_event = true;
         $reservation->user_id = Auth::user()->id;
-        $reservation->save();
+        
+        if (!$reservation->save()) {
+          return redirect()->back()->with('warning', ['There was an error saving the event']);
+        }     
 
         $event = new Event;
         $event->fill($request->all());
         $event->reservation_id = $reservation->id;
         $event->user_id = Auth::user()->id;
-        $event->save();
         
-        Mail::to($reservation->reservation_slot->primary_email)->
-        cc(explode(",", $reservation->reservation_slot->notification_emails))->send(new EventFacultyNotification($event));
+        if ($event->save()) {
+          Mail::to($reservation->reservation_slot->primary_email)->
+          cc(explode(",", $reservation->reservation_slot->notification_emails))->send(new EventFacultyNotification($event));
+        } else {
+          return redirect()->back()->with('warning', ['There was an error saving the event']);
+          $reservation->delete(); //rollback reservation if event doesn't save
+        }
       
 
         $date = date('Y-m-d', strtotime($offset, strtotime($date)));
@@ -136,10 +144,19 @@ class EventController extends Controller
       $reservation->user_id = Auth::user()->id;
       $reservation->save();
 
+      if (!$reservation->save()) {
+        return redirect()->back()->with('warning', ['There was an error updating the event']);
+      } 
+
       $event->fill($request->all());
       $event->reservation_id = $reservation->id;
       $event->user_id = Auth::user()->id;
       $event->save();
+      
+      if (!$event->save()) {
+        return redirect()->back()->with('warning', ['There was an error updating the event']);
+        $reservation->delete(); //rollback reservation if event doesn't save
+      }
 
       return redirect()->route('events-index')->with('status', 'Successfully Updated Event.');
     } else {

@@ -63,9 +63,10 @@
 	  <input type="submit" value="Update this User" class="btn btn-success"/>
 	</form>
 	
+	@if ((Auth::user()->role == 2 && Auth::user() != $user) || Auth::user()->role != 2)
 	<h3>Remove This User</h3>
 	
 	<p><a href="{{route('destroy-user', [$user])}}">Remove this user</a></p>
-	
+	@endif
 </div>
 @endsection

@@ -45,7 +45,11 @@
 	  <tbody>
 	  	@foreach ($events as $event)
 	    <tr>
-	    	<td style="width: 120px;"><b><a href="{{route('show-event', $event)}}">{{$event->name}}</a></b></td>
+	    	<td style="width: 120px;"><b><a href="{{route('show-event', $event)}}">{{$event->name}}</a></b>
+					@if ($event->public && Auth::user()->role == 2)
+					- public
+					@endif
+					</td>
 	      <td><p>{{$event->description}}</p><p><i>{{$event->reservation->reservation_slot->title}}<br/>Date: {{date("l F j, Y", strtotime($event->reservation->start_time))}}
           <br/>Time: {{date("g:i A", strtotime($event->reservation->start_time))}} - {{date("g:i A", strtotime($event->reservation->end_time))}}</td>
 	      <td>{{$event->notification_email}}</td>

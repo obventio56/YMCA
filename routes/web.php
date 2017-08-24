@@ -15,9 +15,6 @@ Auth::routes();
 
 Route::get('/', 'HomeController@index')->name('home');
 
-Route::get('/set-password-form/{user}', 'UserController@set_password_form')->name('set-password-form');
-Route::post('/set-password/{user}', 'UserController@set_password')->name('set-password');
-
 Route::group(['middleware' => ['auth']], function() {
 
   //User routes

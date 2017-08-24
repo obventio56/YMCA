@@ -264,7 +264,7 @@ a:hover {
 }
 
 .container,.navbar-fixed-top .container,.navbar-fixed-bottom .container {
-    width: 940px
+    width: 1280px;
 }
 
 .span1 {
@@ -3341,7 +3341,7 @@ button.btn.btn-mini,input[type="submit"].btn.btn-mini {
 }
 
 .navbar-fixed-top .container,.navbar-fixed-bottom .container {
-    width: 940px
+    width: 1280px;
 }
 
 .navbar-fixed-top {
@@ -4887,4 +4887,14 @@ a.label:hover,a.badge:hover {
 
 .calendar-table.table.table-bordered tr {
   background-color:default !important;
+}
+
+.bigHeader {
+  margin-bottom:0;
+}
+
+table a.btn {
+  white-space: nowrap;
+  overflow: hidden;
+  margin-bottom:10px;
 }

@@ -74,7 +74,7 @@ class UserController extends Controller
     public function index($role = 'all')
     {
       if (Gate::allows('users-index')) {
-        $users = User::whereIn('role', $this->role_lookup[$role])->get();
+        $users = User::whereIn('role', $this->role_lookup[$role])->orderBy('name')->paginate(15);
         return view('users.index', ['users' => $users, 'role' => ucfirst($role)]);
       } else {
         return redirect()->route('events-index')->with('warning', 'You are not authorized to complete that action');
@@ -137,7 +137,7 @@ class UserController extends Controller
     }
   
     public function destroy(User $user) {
-      if (Gate::allows('manipulate-user', $user)) {
+      if (Gate::allows('delete-user', $user)) {
         $current_user = Auth::user();
         $redirect = redirect()->route('users-index')->with('status', 'User successfully deleted');
         if ($current_user == $user) {

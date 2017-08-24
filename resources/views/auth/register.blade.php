@@ -53,7 +53,7 @@
 	  <div><input type="submit" class="btn btn-success" value="Sign Up"/></div>
   </form>
 	
-		<a href="{{ route('register') }}">Sign Up</a><br>
+		<a href="/">Sign In</a><br>
     <a href="{{ route('password.request') }}">
         Forgot Your Password?
     </a>

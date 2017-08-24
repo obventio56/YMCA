@@ -23,6 +23,7 @@ class Event extends Model
     foreach($registrations as $registration) {
       array_push($registration_emails, $registration->user->email);
     }
+    
     array_merge($registration_emails, explode(",", $this->reservation->reservation_slot->notification_emails));
     Mail::to($this->reservation->reservation_slot->primary_email)
       ->bcc($registration_emails)
