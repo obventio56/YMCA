@@ -24,7 +24,7 @@
         <label for="notification_emails">(separate email addresses with a comma and don't use spaces)</label>
         <input value="{{ old('notification_emails') }}" type="text" name="notification_emails"/><br/><br/>
 				
-				<label for="location_id">Email Addresses for Notifications</label>
+				<label for="location_id">Location</label>
         <select name="location_id">
           <option value="">Select Location</option>
           @foreach ($locations as $location)

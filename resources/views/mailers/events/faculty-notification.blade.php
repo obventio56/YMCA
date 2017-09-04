@@ -6,7 +6,7 @@
   <body>
     <h1>{{$event->name}} is scheduled for {{$event->reservation->reservation_slot->title}}</h1>
     <p>The class/event is scheduled to start at {{date('g:i A', strtotime($event->reservation->start_time))}}
-      on {{date('m/d/Y', strtotime($event->reservation->start_time))}}.
+      on {{date('l, F jS Y', strtotime($event->reservation->start_time))}}.
     </p>
     <p>The event organizer has left the following notes:<br/>{{$event->reservation->notes}}</p>
     <p>Event Info:<br/>{{$event->description}}</p>

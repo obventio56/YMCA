@@ -19,7 +19,7 @@ class ReservationController extends Controller
 {
   public function calendar() {
     if (Gate::allows('administrate-reservations')) {
-      $reservations = Reservation::all();
+      $reservations = Reservation::whereDate('start_time', '>', date('Y-m-d', strtotime('-1 year')) )->get();
       return view('reservations.calendar', ["reservations" => $reservations]);
     } else {
       return redirect()->route('events-index')->with('warning', 'You are not authorized to complete that action');
@@ -91,9 +91,15 @@ class ReservationController extends Controller
     
     //send mail
     Mail::to(Auth::user())->send(new ReservationConfirmation($reservation));
-    Mail::to($reservation->reservation_slot->primary_email)->
-      cc(explode(",", $reservation->reservation_slot->notification_emails))->send(new ReservationFacultyNotification($reservation));
     
+    $faculty_mailer = Mail::to($reservation->reservation_slot->primary_email);
+    $notification_emails = explode(",", $reservation->reservation_slot->notification_emails);
+    if ($notification_emails[0] != "") {
+      $faculty_mailer->cc($notification_emails)->send(new ReservationFacultyNotification($reservation));
+    } else {
+      $faculty_mailer->send(new ReservationFacultyNotification($reservation));
+    } 
+        
     return redirect()->route('reservation-slots-index')->with('status', 'Successfully Created Reservation.');
   }
   

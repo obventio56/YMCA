@@ -8,7 +8,7 @@
     <p><b>Location: {{$reservation->reservation_slot->title}}.
     <p>
       You reserved the {{$reservation->reservation_slot->title}} from {{date('g:i A', strtotime($reservation->start_time))}} until {{date('g:i A', strtotime($reservation->end_time))}}
-      on {{date('m/d/Y', strtotime($reservation->start_time))}}.
+      on {{date('l, F jS Y', strtotime($reservation->start_time))}}.
     </p>
     <p>Thanks and have a great day!</p>
   </body>

@@ -7,7 +7,7 @@
     <h1>Thank you for reserving {{$reservation->reservation_slot->title}}</h1>
     <p>
       You reserved the {{$reservation->reservation_slot->title}} from {{date('g:i A', strtotime($reservation->start_time))}} until {{date('g:i A', strtotime($reservation->end_time))}}
-      on {{date('m/d/Y', strtotime($reservation->start_time))}}.
+      on {{date('l, F jS Y', strtotime($reservation->start_time))}}.
     </p>
     <h2>Notes you included:</h2>
     <p>{{$reservation->notes}}</p>

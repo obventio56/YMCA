@@ -2,7 +2,7 @@
 
 @section("content")
   <h2>Reservations Monthly Overview</h2>
-	<div class="tiva-events-calendar full" data-source="json"></div>
+	<div class="tiva-events-calendar full" data-switch="hide" data-source="json"></div>
 @endsection
 
 @section("javascript")
@@ -25,7 +25,7 @@
 						"month":"{{ date('n', strtotime($reservation->start_time)) }}",
 						"year":"{{ date('o', strtotime($reservation->start_time)) }}",
 						"time":"{{ date('g:i A', strtotime($reservation->start_time)) }} - {{ date('g:i A', strtotime($reservation->end_time)) }}",
-            "description": "{{$reservation->notes}}" +
+            "description": "{{ preg_replace( "/\r|\n/", "", $reservation->notes ) }}" +
 						"<br><br>For more information please email <a href='mailto:{{$reservation->user->email}}'>{{$reservation->user->email}}<\/a>." + 
 						"<br><br><a href='{{route("destroy-reservation", [$reservation])}}' class='btn btn-danger pull-left' data-confirm='Are you sure you want to DELETE this reservation?' rel='nofollow'>Cancel This Reservation<\/a>"
       },
