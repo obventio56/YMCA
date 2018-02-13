@@ -2,7 +2,11 @@
 
 
 @section("content")
-
+@if (Auth::user()->role == 2)
+	<a href="{{route('calendar-of-reservations')}}" class="btn" style="margin-right: 9px;">Calendar Overview</a>
+	<a href="{{route('reservation-slot-groups-index')}}" class="btn" style="margin-right: 9px;">Reservation Slot Groups</a>
+	<br/><br/>
+@endif
 			<h2>Here Are The Available Slots For {{$reservation_slot->title}} on {{date('l, n/j/Y', $date)}}</h2>
 	<p>Click on the desired start time of your reservation. We'll have you choose the duration of your reservation next.</p>
 	<hr>

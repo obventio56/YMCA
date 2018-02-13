@@ -16,9 +16,15 @@ Auth::routes();
 Route::get('/', 'HomeController@index')->name('home');
 
 Route::group(['middleware' => ['auth']], function() {
+  
+  Route::get('/racquetball-schedule', function ($name = null) {
+      return redirect()->route('show-reservation-slot-group', [1]);
+  });
 
   //User routes
   Route::get('/users/{role?}', 'UserController@index')->name('users-index');
+  Route::get('/user/new', 'UserController@new')->name('new-user');
+  Route::post('/user/create', 'UserController@create')->name('create-user');
   Route::get('/user/edit/{user}', 'UserController@edit')->name('edit-user');
   Route::post('/user/update/{user}', 'UserController@update')->name('update-user');
   Route::get('/user/destroy/{user}', 'UserController@destroy')->name('destroy-user');

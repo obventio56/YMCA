@@ -49,6 +49,14 @@ class RegisterController extends Controller
      */
     protected function validator(array $data)
     {
+        //if there is a softley deleted user, reactivate the account
+        $softly_deleted_user = User::where('email', $data["email"])
+          ->onlyTrashed()->get()->first();
+      
+        if ($softly_deleted_user) {
+          return Validator::make($data, []);
+        }
+      
         return Validator::make($data, [
             'name' => 'required|string|max:255',
             'email' => 'required|string|email|max:255|unique:users',
@@ -64,6 +72,7 @@ class RegisterController extends Controller
      */
     protected function create(array $data)
     {
+      
         $user = User::create([
             'name' => $data['name'],
             'role' => 0,
@@ -72,8 +81,8 @@ class RegisterController extends Controller
             'password' => bcrypt($data['password']),
         ]);
       
-      Mail::bcc('mbell@carlislefamilyymca.org')
-        ->send(new UserCreationAdminNotification($user));  
+      Mail::bcc(['ascottpedersen@gmail.com'])
+        ->send(new UserCreationAdminNotification($user));
       
         return $user;
     }

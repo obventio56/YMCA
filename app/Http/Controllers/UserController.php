@@ -31,6 +31,17 @@ class UserController extends Controller
         );
     }
   
+    public function new() {
+      return view('users.new');
+    }
+  
+    public function create(Request $request) {
+      $user = new User;
+      $user->fill($request->all());
+      $user->save();
+      return redirect()->route('users-index')->with('message', 'New user successfully created');;
+    }
+  
     public function set_password_form(User $user) {
       return view('users.set-password-form', ['user' => $user]);
     }
@@ -71,10 +82,15 @@ class UserController extends Controller
       return $validator; 
     }
   
-    public function index($role = 'all')
+    public function index(Request $request, $role = 'all')
     {
       if (Gate::allows('users-index')) {
         $users = User::whereIn('role', $this->role_lookup[$role])->orderBy('name')->paginate(15);
+        if ($request->name) {
+          $users = User::whereIn('role', $this->role_lookup[$role])
+            ->where('name', 'LIKE', '%' . $request->name . '%')
+            ->orderBy('name')->paginate(1000);
+        }
         return view('users.index', ['users' => $users, 'role' => ucfirst($role)]);
       } else {
         return redirect()->route('events-index')->with('warning', 'You are not authorized to complete that action');
@@ -120,6 +136,15 @@ class UserController extends Controller
           $user->role = $updated_values["role"];
         }
         
+        $validator = Validator::make($updated_values, [
+            'email' => 'unique:users,email'.$user->id
+        ]);
+        if ($validator->fails()) {
+            return Redirect::back()
+                  ->withErrors($validator) // send back all errors to the login form
+                  ->withInput();
+        }
+        
         $user->update( array_filter($updated_values)); //array_filter removes null password
         
         //sorry this is gross, don't know a better way to do it...
@@ -142,7 +167,7 @@ class UserController extends Controller
         $redirect = redirect()->route('users-index')->with('status', 'User successfully deleted');
         if ($current_user == $user) {
           Auth::logout();
-          $redirect = redirect()->route('landing')->with('status', 'Your account has been deleted');
+          $redirect = redirect()->route('home')->with('status', 'Your account has been deleted');
         }
         $user->delete();
         return $redirect;

@@ -6,7 +6,7 @@
 			<div class="span12">
 				<h3>{{$event->name}}
           @if (!is_null($event->fee))
-             - ${{$event->fee}}
+             - {{$event->fee}}
           @endif
         </h3>
 				<h4 style="color: #999;"><i>{{$event->reservation->reservation_slot->title}}</i></h4><br/>

@@ -11,11 +11,17 @@
 	
 @if (Auth::user()->role == 2)
 	<a href="{{route('calendar-of-reservations')}}" class="btn" style="margin-right: 9px;">Calendar Overview</a>
+	<a href="/racquetball-schedule" class="btn" style="margin-right: 9px;">Daily Racquetball/Squash</a>
 	<a href="{{route('reservation-slot-groups-index')}}" class="btn" style="margin-right: 9px;">Reservation Slot Groups</a>
 	<br/><br/>
 @endif
 		
 @if ($reservation_slots)
+	<form method="get" action="/reservation-slots">
+		<input class="no-margin" type="text" placeholder="Search reservation slots" name="title">
+		<input type="submit" name="Search" class="btn btn-success">
+	</form>
+	
 	<table class="table table-bordered table-striped">
 	  <thead>
 	    <tr>
@@ -32,10 +38,10 @@
 	      <td>
 	      	<p>{{$reservation_slot->description}}</p>
 	      	<p>Copy and paste the following URL anywhere that you need to link to registration for this reservation slot:<br/><br/>
-		      	<span style="color: #ff0000;">{{route('check-date-for-reservation', [$reservation_slot])}}</span>
+		      	<a style="color: #ff0000;" href="{{route('check-date-for-reservation', [$reservation_slot])}}">{{route('check-date-for-reservation', [$reservation_slot])}}</a>
 	      	</p>
 	      </td>
-	      <td>{{$reservation_slot->primary_email}}<br/><br/>{{str_replace(",", "\n", $reservation_slot->notification_emails)}}</td>
+	      <td>{{$reservation_slot->primary_email}}<br/><br/>{{str_replace(",", ", ", $reservation_slot->notification_emails)}}</td>
 				<td style="width: 270px;"><a class="btn btn-danger pull-right" href="{{route("destroy-reservation-slot", [$reservation_slot])}}">Delete Reservation Slot</a>
 					<a class="btn btn-info pull-right" style="margin-right: 9px;" href="{{route("edit-reservation-slot", [$reservation_slot])}}">Edit Reservation Slot</a>
 	    </tr>

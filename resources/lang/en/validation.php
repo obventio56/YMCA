@@ -12,7 +12,8 @@ return [
     | as the size rules. Feel free to tweak each of these messages here.
     |
     */
-
+    "email_list"           => "Field \":attribute\" must be a comma separated list of emails.",
+    "greater_than_field"   => "Field \":attribute\" must be greater than \":field\".",
     'accepted'             => 'The :attribute must be accepted.',
     'active_url'           => 'The :attribute is not a valid URL.',
     'after'                => 'The :attribute must be a date after :date.',

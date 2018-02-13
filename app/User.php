@@ -59,6 +59,14 @@ class User extends Authenticatable
       return false;
     } 
   
+    public function undelete($id)
+    {
+          User::withTrashed()
+          ->where('id', $id)
+          ->restore();
+          return back();
+    }
+  
     protected $hidden = [
         'password', 'remember_token',
     ];

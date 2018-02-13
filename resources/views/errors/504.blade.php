@@ -10,7 +10,6 @@
 	<link href="{{ asset('js/lib/base.css') }}" rel="stylesheet">
 	<link href="{{ asset('css/styles.css') }}" rel="stylesheet">
 	<link href="{{ asset('css/print.css') }}" rel="stylesheet" media="print">
-	@yield('stylesheets')
 </head>
 <body>
 	<header>
@@ -71,31 +70,17 @@
 	</header>
 
 	<div id="content" class="container">
-		<div id="alerts">
-			@if (Session::has('status'))
-			<p class="alert alert-success">{{session('status')}}</p>
-			<br/><br/>
-			@endif
-			@if (Session::has('warning'))
-			<p class="alert alert-danger">{{session('warning')}}</p>
-			<br/><br/>
-			@endif
-		@if ($errors->any())
-			<div class="alert alert-danger">
-				<ul>
-					@foreach ($errors->all() as $error)
-						<li>{{ $error }}</li>
-					@endforeach
-				</ul>
-			</div>
-			@endif
-		</div>
+	
 		<!--
 		@if (Auth::user())
 			<a href="{{ URL::previous() }}" class="btn"><i class="icon-arrow-left" aria-hidden="true"></i> Go Back</a><br><br>
 		@endif
 		-->
-		@yield('content')
+	<div class="container">
+		<h3>Oops! You're lost!</h3>
+		<p>Better head <a href="{{route('events-index')}}">home</a></p>
+	</div>
+	
 	</div>
   <script src="{{ asset('js/app.js') }}"></script> 
   <script src="{{ asset('js/jquery-1.8.0.min.js') }}"></script> 
@@ -119,4 +104,3 @@
 	@yield('javascript')
 </body>
 </html>
-

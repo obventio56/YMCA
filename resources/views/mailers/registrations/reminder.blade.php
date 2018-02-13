@@ -5,7 +5,7 @@
   </head>
   <body>
     <h1>Just reminding you about {{$registration->event->name}}, {{$registration->user->name}}!</h1>
-    <p><b>Location: {{registration->event->reservation->reservation_slot->title}}.
+    <p><b>Location: {{$registration->event->reservation->reservation_slot->title}}.
     <p>
       You have successfully registered for {{$registration->event->name}}.  The class/event is scheduled to start at {{date('g:i A', strtotime($registration->event->reservation->start_time))}}
       on .{{date('l, F jS Y', strtotime($registration->event->reservation->start_time))}}

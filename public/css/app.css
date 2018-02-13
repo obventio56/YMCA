@@ -4914,3 +4914,6 @@ table a.btn {
   overflow: hidden;
   margin-bottom:10px;
 }
+input.no-margin {
+  margin-bottom:0;
+}

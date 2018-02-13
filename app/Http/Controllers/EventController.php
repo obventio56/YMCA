@@ -24,10 +24,28 @@ class EventController extends Controller
     "month" => "+1 month"
   ];
   
-  public function index() {
-    $events = Event::all()->where('public', true)->sortBy('reservation.start_time');
+  public function index(Request $request) {
+    $events = Event::all()->where('public', true)
+      ->where('reservation.start_time', '>', date('Y-m-d'))
+      ->sortBy('reservation.start_time');
     if (Auth::user()->role == 2 || Auth::user()->role == 1) {
-      $events = Event::all()->sortBy('reservation.start_time');
+      $events = Event::all()
+        ->where('reservation.start_time', '>', date('Y-m-d'))
+        ->sortBy('reservation.start_time');
+    }
+    
+    if ($request->name) {
+      $events = Event::where('name', 'LIKE', '%' . $request->name . '%')
+        ->where('public', true)
+        ->get()
+        ->where('reservation.start_time', '>', date('Y-m-d'))
+        ->sortBy('reservation.start_time');
+      if (Auth::user()->role == 2 || Auth::user()->role == 1) {
+        $events = Event::where('name', 'LIKE', '%' . $request->name . '%')
+          ->get()
+          ->where('reservation.start_time', '>', date('Y-m-d'))
+          ->sortBy('reservation.start_time');
+      }
     }
     return view('events.index', ["events" => $events]);
   }
@@ -59,7 +77,7 @@ class EventController extends Controller
       $offset = "";
       $date = $request->date;
 
-      if ($request->recurring) { //set parameters if recurring
+      if ($request->is_recurring) { //set parameters if recurring
         $times_occurring = intval($request->all()['recurring']['times']);
         $frequency = $request->all()["recurring"]["frequency"];
         $offset = $this->offset_lookup[$frequency];
@@ -91,10 +109,15 @@ class EventController extends Controller
         $event->fill($request->all());
         $event->reservation_id = $reservation->id;
         $event->user_id = Auth::user()->id;
-        
         if ($event->save()) {
-          Mail::to($reservation->reservation_slot->primary_email)->
-          cc(explode(",", $reservation->reservation_slot->notification_emails))->send(new EventFacultyNotification($event));
+          if ($reservation->reservation_slot->primary_email != "") {
+            $mailer = Mail::to( explode(",", $reservation->reservation_slot->primary_email));
+            $notification_emails = explode(",", $reservation->reservation_slot->notification_emails);
+            if ($notification_emails[0] != "") {
+              $mailer = $mailer->bcc($notification_emails);
+            }
+            $mailer->send(new EventFacultyNotification($event));
+          }
         } else {
           return redirect()->back()->with('warning', ['There was an error saving the event']);
           $reservation->delete(); //rollback reservation if event doesn't save

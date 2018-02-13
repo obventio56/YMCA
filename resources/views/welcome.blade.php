@@ -1,7 +1,7 @@
 @extends('layouts.app')
 
 @section('content')
-  <h1 class="bigHeader">Welcome to our online event registration system.</h1><br/>
+  <h1 class="bigHeader">Welcome to our online event <br>registration system.</h1><br/>
 	<h2 >Sign in</h2>
 	<p>If you're looking for more information on any of the events or classes that we offer, please visit our <a href="http://www.carlislefamilyymca.org">website</a>.  </p>
   <p>If you want to register for events at the Carlisle YMCA you'll need to have an account with our event registration system.  Login with the form below or <a href="{{ route('register') }}">Sign Up Here!</a></p>

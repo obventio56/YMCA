@@ -84,9 +84,9 @@ return [
     |
     */
 
-    'username' => 'postmaster@mg.agarwelding.com',
+    'username' => 'postmaster@wmg.carlislefamilyymca.org',
 
-    'password' => 'a39f62217a4807156e241bc70e8f1d07',
+    'password' => '93ac749b6c2c3c0ccfe337327968eeb2',
 
     /*
     |--------------------------------------------------------------------------

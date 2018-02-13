@@ -59,8 +59,10 @@
 				<input value="{{ old('max_time') }}" type="text" name="max_time"><br/><br/>
 				<label>Advanced Reservation Window (in days)</label>
 				<input value="{{ old('reservation_window') }}" type="text" name="reservation_window"><br/><br/>
+				<!--
 				<label>Is this reservation slot public?</label>
 				<input type="checkbox" name="public"><br/><br/>
+				-->
 				<label>Groups</label>
 				<select name="groups[]" multiple>
 					@foreach ($reservation_slot_groups as $reservation_slot_group)

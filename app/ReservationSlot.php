@@ -15,8 +15,11 @@ class ReservationSlot extends Model
   //I don't know if this is bad form but I'm going to do it anyways:
   
   public function get_hours_of_operation() {
+
     return json_decode($this->hours_of_operation);
+    
   }
+  
   public function set_hours_of_operation(Array $hours_of_operation) {
     $this->hours_of_operation = json_encode($hours_of_operation);
   }
@@ -39,7 +42,7 @@ class ReservationSlot extends Model
     foreach($this->reservations as $reservation) {
       $reservation->custom_destroy();
     }
-    foreach ($this->groups as $group) {
+    foreach ($this->reservation_slot_groups as $group) {
       $group->pivot->delete();
     }
     return $this->delete();

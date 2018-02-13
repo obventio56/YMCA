@@ -15,7 +15,7 @@ return [
     */
 
     'mailgun' => [
-        'domain' => 'mg.agarwelding.com',
+        'domain' => 'wmg.carlislefamilyymca.org',
         'secret' => 'key-670b36f6d0ba754a628a9337c28aa147',
     ],
 

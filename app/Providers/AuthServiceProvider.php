@@ -69,6 +69,10 @@ class AuthServiceProvider extends ServiceProvider
         });
    
         //reservation gates
+        Gate::define('create-reservation', function ($user) {
+          return !$user->suspended;
+        });
+      
         Gate::define('manipulate-reservation', function ($user, Reservation $reservation) {
           return ($user->role == 2 || $user->id == $reservation->user->id) && !$user->suspended;
         });

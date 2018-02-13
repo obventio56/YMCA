@@ -15,7 +15,7 @@
       @foreach($reservation_slot->reservations->where("start_time", "<", date('Y-m-d H:i:s', $tomorrow))->where("end_time", ">", date('Y-m-d H:i:s', $today)) as $reservation)
 
         <p><b>{{date('g:i A', strtotime($reservation->start_time))}} until {{date('g:i A', strtotime($reservation->end_time))}}</b>
-          - <a href="mailto:{{$reservation->user->email}}">{{$reservation->user->email}}</a>
+          - <a href="mailto:{{$reservation->user->email}}">{{$reservation->user->name}}</a>
           - {{$reservation->notes}}</p>
 
       @endforeach

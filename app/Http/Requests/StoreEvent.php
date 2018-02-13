@@ -25,12 +25,13 @@ class StoreEvent extends FormRequest
     {
         return [
             'name' => 'required',
+            'description' => 'required',
             'notification_email' => 'required|email',
             'date' => 'required|date',
             'start_time' => 'required|date_format:h:i A',
             'end_time' => 'required|date_format:h:i A',
-            'available_spots' => 'required|numeric',
-            'registration_window' => 'nullable|numeric',
+            'available_spots' => 'required|integer',
+            'registration_window' => 'nullable|integer',
         ];
     }
 }

@@ -18,6 +18,9 @@ class Event extends Model
     
     //I apologize that this is so ugly
     //I spent a good bit of time finding the right way to no avail ;(
+    
+    $primary_email = $this->reservation->reservation_slot->primary_email == "" ? "hello@carlislefamilyymca.org" : $this->reservation->reservation_slot->primary_email;
+    
     $registrations = $this->registrations;
     $registration_emails = Array();
     foreach($registrations as $registration) {
@@ -25,9 +28,12 @@ class Event extends Model
     }
     
     array_merge($registration_emails, explode(",", $this->reservation->reservation_slot->notification_emails));
-    Mail::to($this->reservation->reservation_slot->primary_email)
-      ->bcc($registration_emails)
-      ->send(new EventCancelationNotification($this));
+    
+    $mailer = Mail::to( explode(",", $primary_email));
+    if (sizeof($registration_emails) != 0) {
+      $mailer = $mailer->bcc($registration_emails);
+    }
+    $mailer->send(new EventCancelationNotification($this));
     
     foreach ($this->registrations as $registration) {
       $registration->delete();

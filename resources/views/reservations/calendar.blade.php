@@ -2,7 +2,12 @@
 
 @section("content")
   <h2>Reservations Monthly Overview</h2>
-	<div class="tiva-events-calendar full" data-switch="hide" data-source="json"></div>
+	@if (Auth::user()->role == 2)
+		<a href="{{route('reservation-slots-index')}}" class="btn" style="margin-right: 9px;">All Reservations</a>
+		<a href="{{route('reservation-slot-groups-index')}}" class="btn" style="margin-right: 9px;">Reservation Slot Groups</a>
+		<br/><br/>
+	@endif
+	<div class="tiva-events-calendar full" data-source="json"></div>
 @endsection
 
 @section("javascript")

@@ -38,7 +38,7 @@
               <input type="text" name="date" class="datepicker input-small"/>
               <span class="add-on"><i class="icon-calendar"></i></span>
           </div><br/>
-					<input type="checkbox" name="recurring"/> Recurring 
+					<input type="checkbox" name="is_recurring"/> Recurring 
 					<input class="thin_input" type="text" name="recurring[times]"/> times 
 					<select name="recurring[frequency]"/>
 						<option value="day">daily</option>
