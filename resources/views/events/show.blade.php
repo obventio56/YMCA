@@ -58,7 +58,7 @@
 		      
 		          <tr>
 		            <td>{{$registration->user->name}}</td>
-		            <td>{{$registration->user->name}}</td>
+		            <td>{{$registration->user->email}}</td>
 		            <td><a href="{{route('destroy-registration', $registration)}}">Cancel Registration</a></td>
 		          </tr>
 					@endforeach

@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Auth;
 
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
+use App\User;
 
 class LoginController extends Controller
 {
@@ -32,6 +33,20 @@ class LoginController extends Controller
      *
      * @return void
      */
+  
+    public function authenticate()
+    {
+        
+        if (Auth::attempt(['email' => $email, 'password' => $password])) {
+            // Authentication passed...
+            return redirect()->intended('dashboard');
+        } else if ($user = User::where('email',$email)->first()) {
+          return redirect('/password/reset');
+        } else {
+          return redirect('/');
+        }
+    }
+  
     public function __construct()
     {
         $this->middleware('guest')->except('logout');

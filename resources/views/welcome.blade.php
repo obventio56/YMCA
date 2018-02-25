@@ -37,5 +37,9 @@
     <a href="{{ route('password.request') }}">
         Forgot Your Password?
     </a>
+
+	<h2>We have a new scheduler!</h2>
+	
+<p>We've recently migrated our site and we are requiring users to choose a new password. If you are having trouble logging in, please try resetting your password <a href="http://scheduler.carlislefamilyymca.org/password/reset">here.</a></p>
   
 @endsection

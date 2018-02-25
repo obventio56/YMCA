@@ -75,4 +75,12 @@ class ReservationSlotGroupController extends Controller
       return redirect()->route('events-index')->with('warning', 'You are not authorized to complete that action');
     }
   }
+  
+  public function check_date(ReservationSlotGroup $group) {
+    return redirect()->route('check-date-for-reservation', ['reservation_slots' => implode(',', $group->reservation_slots->pluck('id')->toArray()) ]);
+  }
+  
+  public function check_time(ReservationSlotGroup $group) {
+    return redirect()->route('check-date-for-reservation', ['reservation_slots' => implode(',', $group->reservation_slots->pluck('id')->toArray()) ]);
+  }
 }

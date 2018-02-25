@@ -17,7 +17,11 @@
   events_json = {"items":[
 	  @foreach($reservations as $reservation)
       {
+						@if(isset($reservation->reservation_slot))
             "name": "{{$reservation->reservation_slot->title}}",
+						@else
+            "name": "{{$reservation->title}}",
+						@endif
 						"color":
 						@if($reservation->for_event)
 						"1",

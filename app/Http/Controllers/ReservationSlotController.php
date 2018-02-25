@@ -40,6 +40,7 @@ class ReservationSlotController extends Controller
       
       return view('reservation_slots.index', 
       [
+        'raquetball_group_id' => env('RACQUETBALL_GROUP', 2),
         'reservation_slots' => $reservation_slots,
         'reservations' => $reservations,
         'your_reservations' => $your_reservations,

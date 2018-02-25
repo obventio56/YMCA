@@ -4,18 +4,23 @@
 <div class="container">
 	<h3>Reservation Slots and Reservations</h3>
 	<p>You'll find all reservation slots that are available to reserve listed below.</p>
-	
+
+
 @if (Auth::user()->role == 2 || Auth::user()->role == 1)
 	<a class="btn btn-success" style="margin-right: 9px;" href="{{ route('new-reservation-slot') }}" >Create New Reservation Slot</a>
 @endif
-	
+
 @if (Auth::user()->role == 2)
 	<a href="{{route('calendar-of-reservations')}}" class="btn" style="margin-right: 9px;">Calendar Overview</a>
 	<a href="/racquetball-schedule" class="btn" style="margin-right: 9px;">Daily Racquetball/Squash</a>
 	<a href="{{route('reservation-slot-groups-index')}}" class="btn" style="margin-right: 9px;">Reservation Slot Groups</a>
-	<br/><br/>
 @endif
-		
+	<a href="{{route('check-date-for-reservation-slot-group', $raquetball_group_id)}}" class="btn " style="margin-right: 9px;">View Court Reservations</a>
+	
+	
+	<br/><br/>
+
+
 @if ($reservation_slots)
 	<form method="get" action="/reservation-slots">
 		<input class="no-margin" type="text" placeholder="Search reservation slots" name="title">

@@ -26,33 +26,65 @@ class ReservationController extends Controller
     }
   }
   
-  public function check_date(ReservationSlot $reservation_slot) {
-    $hours_of_operation = json_decode($reservation_slot->hours_of_operation);
-    $max_time = $this->convertToHoursMins($reservation_slot->max_time);
-    $min_time = $this->convertToHoursMins($reservation_slot->time_interval);
-    return view('reservations.pick-date', ["reservation_slot" => $reservation_slot,
+  public function check_date($reservation_slots) {
+    
+    if (!is_array($reservation_slots)) {
+      $reservation_slots = explode(",", $reservation_slots);
+    }
+    
+    $reservation_slots_ids = [];
+    $reservation_slots_data = [];
+      
+    foreach ($reservation_slots as $reservation_slot) {
+
+      $reservation_slot = ReservationSlot::find($reservation_slot);
+      $hours_of_operation = json_decode($reservation_slot->hours_of_operation);
+      $max_time = $this->convertToHoursMins($reservation_slot->max_time);
+      $min_time = $this->convertToHoursMins($reservation_slot->time_interval);
+      
+      array_push($reservation_slots_data, ["reservation_slot" => $reservation_slot,
                                            "hours_of_operation" => $hours_of_operation,
                                             "max_time" => $max_time,
                                             "min_time" => $min_time]);
+      array_push($reservation_slots_ids, $reservation_slot->id);
+    }
+    
+   
+    return view('reservations.pick-date', ["reservation_slots_data" => $reservation_slots_data,
+                                          "reservation_slots_ids" => implode(",", $reservation_slots_ids)]);
   }
   
-  public function check_time(Request $request, ReservationSlot $reservation_slot) {
+  public function check_time(Request $request, $reservation_slots) {
     if (is_null($request->desired_date)) {
       return back()->withErrors(['desired_date' => ['Date cannot be blank']]);
     }
+        
+    //when there is only one reservation slot being checked
+    if (!is_array($reservation_slots)) {
+      $reservation_slots = explode(",",$reservation_slots);
+    }
+            
+    $reservation_slot_time_slots = [];
     
-    //validate date
-    //convert date format into something php understands. This is not intutive
-    $desired_date = DateTime::createFromFormat('m-d-Y', $request->desired_date)->getTimestamp();
-    if ($desired_date - time() <= $reservation_slot->reservation_window*86400) {
-      $day_of_the_week = strtolower(date('l', $desired_date));
-      $hours = $reservation_slot->get_hours_of_operation()->$day_of_the_week;
-      $complete_slots = $this->generate_time_slots($reservation_slot, $desired_date, $hours);
-      return view('reservations.check-time', ["reservation_slot" => $reservation_slot,
+    foreach($reservation_slots as $reservation_slot) {
+      $reservation_slot = ReservationSlot::find($reservation_slot);
+      //validate date
+      //convert date format into something php understands. This is not intutive
+      $desired_date = DateTime::createFromFormat('m-d-Y', $request->desired_date)->getTimestamp();
+      if ($desired_date - time() <= $reservation_slot->reservation_window*86400) {
+        $day_of_the_week = strtolower(date('l', $desired_date));
+        $hours = $reservation_slot->get_hours_of_operation()->$day_of_the_week;
+        $complete_slots = $this->generate_time_slots($reservation_slot, $desired_date, $hours);
+        
+        array_push($reservation_slot_time_slots, ["reservation_slot" => $reservation_slot,
                                        "hours" => $hours,
                                        "date" => $desired_date,
                                        "complete_slots" => $complete_slots
                                       ]);
+      } 
+    }
+    if (count($reservation_slot_time_slots) > 0) {
+      return view('reservations.check-time', ["reservation_slot_time_slots" => $reservation_slot_time_slots]);
     } else {
       return back()->withErrors(['desired_date' => ['The date you selected is out of range for this reservation slot']]);
     }

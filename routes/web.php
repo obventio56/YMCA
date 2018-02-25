@@ -18,9 +18,13 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::group(['middleware' => ['auth']], function() {
   
   Route::get('/racquetball-schedule', function ($name = null) {
-      return redirect()->route('show-reservation-slot-group', [1]);
+      return redirect()->route('show-reservation-slot-group', [2]);
   });
 
+  Route::get('/reserve-courts', function ($name = null) {
+      return redirect('/reservation/check_date/1,3,5,2');
+  });
+  
   //User routes
   Route::get('/users/{role?}', 'UserController@index')->name('users-index');
   Route::get('/user/new', 'UserController@new')->name('new-user');
@@ -52,11 +56,17 @@ Route::group(['middleware' => ['auth']], function() {
   Route::get('/reservation-slot-group/{group}', 'ReservationSlotGroupController@show')->name('show-reservation-slot-group');
   Route::post('/reservation-slot-group/{group}', 'ReservationSlotGroupController@show_with_date')->name('show-reservation-slot-with-date');
   Route::get('/reservation-slot-group/destroy/{group}', 'ReservationSlotGroupController@destroy')->name('destroy-reservation-slot-group');
+  Route::get('/reservation-slot-group/check_date/{group}', 'ReservationSlotGroupController@check_date')->name('check-date-for-reservation-slot-group');
+  Route::get('/reservation-slot-group/check_time/{group}','ReservationSlotGroupController@check_time')->name('check-time-for-reservation-slot-group'); 
 
+  
   //Reservation routes
   Route::get('/reservation/check_date/{reservation_slot}', 'ReservationController@check_date')->name('check-date-for-reservation');
-  Route::post('/reservation/check_time/{reservation_slot}','ReservationController@check_time')->name('check-time-for-reservation'); //this is post because the date is passed by a form. 
-                                                                                                           //This wouldn't be my choice, but i'm not going to re-do the markup
+  //this is post because the date is passed by a form. 
+  Route::post('/reservation/check_time/{reservation_slot}','ReservationController@check_time')->name('check-time-for-reservation'); 
+  //this is get because the date could also be passed by not a form. 
+  Route::get('/reservation/check_time/{reservation_slot}','ReservationController@check_time')->name('check-time-for-reservation'); 
+  //This wouldn't be my choice, but i'm not going to re-do the markup
   Route::get('/reservation/new/{reservation_slot}/{desired_date_time}', 'ReservationController@new')->name('new-reservation');
   Route::get('/reservation/destroy/{reservation}', 'ReservationController@destroy')->name('destroy-reservation');
   Route::post('/reservation/create', 'ReservationController@create')->name('create-reservation');
