@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Auth;
 use App\Http\Controllers\Controller;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
 use App\User;
+use Illuminate\Http\Request;
 
 class LoginController extends Controller
 {
@@ -34,19 +35,25 @@ class LoginController extends Controller
      * @return void
      */
   
-    public function authenticate()
+    //this function handle's people signing on again from their old account
+    //if the user exists but their password is "false", make them reset it
+    //I think using false is safe bc the hashing function shouldn't be capable of producing false
+  
+    protected function sendFailedLoginResponse(Request $request)
     {
+      
+      if (User::where(['email' => $request->email, 'password' => "false"])->first()) {
+        return redirect('/password/reset');
+      } else {
         
-        if (Auth::attempt(['email' => $email, 'password' => $password])) {
-            // Authentication passed...
-            return redirect()->intended('dashboard');
-        } else if ($user = User::where('email',$email)->first()) {
-          return redirect('/password/reset');
-        } else {
-          return redirect('/');
-        }
+        $errors = [$this->username() => trans('auth.failed')];
+        return redirect()->back()
+            ->withInput($request->only($this->username(), 'remember'))
+            ->withErrors($errors);
+      }
     }
   
+
     public function __construct()
     {
         $this->middleware('guest')->except('logout');

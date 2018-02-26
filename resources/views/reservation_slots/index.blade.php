@@ -12,8 +12,8 @@
 
 @if (Auth::user()->role == 2)
 	<a href="{{route('calendar-of-reservations')}}" class="btn" style="margin-right: 9px;">Calendar Overview</a>
-	<a href="/racquetball-schedule" class="btn" style="margin-right: 9px;">Daily Racquetball/Squash</a>
 	<a href="{{route('reservation-slot-groups-index')}}" class="btn" style="margin-right: 9px;">Reservation Slot Groups</a>
+	<a href="/racquetball-schedule" class="btn" style="margin-right: 9px;">Daily Racquetball/Squash</a>
 @endif
 	<a href="{{route('check-date-for-reservation-slot-group', $raquetball_group_id)}}" class="btn " style="margin-right: 9px;">View Court Reservations</a>
 	
