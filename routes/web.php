@@ -18,11 +18,11 @@ Route::get('/', 'HomeController@index')->name('home');
 Route::group(['middleware' => ['auth']], function() {
   
   Route::get('/racquetball-schedule', function ($name = null) {
-      return redirect()->route('show-reservation-slot-group', [2]);
+      return redirect()->route('show-reservation-slot-group', [env('RACQUETBALL_GROUP', 2)]);
   });
 
   Route::get('/reserve-courts', function ($name = null) {
-      return redirect('/reservation/check_date/1,3,5,2');
+      return redirect()->route('check-date-for-reservation-slot-group', [env('RACQUETBALL_GROUP', 2)]);;
   });
   
   //User routes
