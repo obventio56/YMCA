@@ -80,7 +80,8 @@ class ReservationSlotGroupController extends Controller
     return redirect()->route('check-date-for-reservation', ['reservation_slots' => implode(',', $group->reservation_slots->pluck('id')->toArray()) ]);
   }
   
-  public function check_time(ReservationSlotGroup $group) {
-    return redirect()->route('check-date-for-reservation', ['reservation_slots' => implode(',', $group->reservation_slots->pluck('id')->toArray()) ]);
+  public function check_time(ReservationSlotGroup $group, Request $request) {
+    return redirect()->route('check-time-for-reservation', ['reservation_slots' => implode(',', $group->reservation_slots->pluck('id')->toArray()), 
+                                                            'desired_date' => $request->desired_date ]);
   }
 }
