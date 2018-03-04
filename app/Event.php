@@ -11,37 +11,39 @@ class Event extends Model
 {
   use SoftDeletes;
   protected $fillable = ["fee", "description", "name", "available_spots", "notification_email", "public", "registration_window"];
+   
+  public static function boot()
+  {
+      parent::boot();
+
+      static::deleted(function ($event) {
     
-  public function custom_destroy($destroy_reservation=true) {
-    
-    //this email happens here to prevent copied code
-    
-    //I apologize that this is so ugly
-    //I spent a good bit of time finding the right way to no avail ;(
-    
-    $primary_email = $this->reservation->reservation_slot->primary_email == "" ? "hello@carlislefamilyymca.org" : $this->reservation->reservation_slot->primary_email;
-    
-    $registrations = $this->registrations;
-    $registration_emails = Array();
-    foreach($registrations as $registration) {
-      array_push($registration_emails, $registration->user->email);
-    }
-    
-    array_merge($registration_emails, explode(",", $this->reservation->reservation_slot->notification_emails));
-    
-    $mailer = Mail::to( explode(",", $primary_email));
-    if (sizeof($registration_emails) != 0) {
-      $mailer = $mailer->bcc($registration_emails);
-    }
-    $mailer->send(new EventCancelationNotification($this));
-    
-    foreach ($this->registrations as $registration) {
-      $registration->delete();
-    }
-    if ($destroy_reservation) {
-      $this->reservation->delete();
-    }
-    return $this->delete();
+          //this email happens here to prevent copied code
+
+          //I apologize that this is so ugly
+          //I spent a good bit of time finding the right way to no avail ;(
+
+          $primary_email = $event->reservation->reservation_slot->primary_email == "" ? "hello@carlislefamilyymca.org" : $event->reservation->reservation_slot->primary_email;
+
+          $registrations = $event->registrations;
+          $registration_emails = Array();
+          foreach($registrations as $registration) {
+            array_push($registration_emails, $registration->user->email);
+          }
+
+          array_merge($registration_emails, explode(",", $event->reservation->reservation_slot->notification_emails));
+
+          $mailer = Mail::to( explode(",", $primary_email));
+          if (sizeof($registration_emails) != 0) {
+            $mailer = $mailer->bcc($registration_emails);
+          }
+          $mailer->send(new EventCancelationNotification($event));
+
+          $event->registrations()->delete();
+        
+          $event->reservation()->delete();
+          
+        });
   }
   
   public function user() {

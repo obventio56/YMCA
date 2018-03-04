@@ -69,7 +69,7 @@ class LocationController extends Controller
   
     public function destroy(Location $location) {
       if (Gate::allows('manipulate-location')) {
-        $location->custom_destroy();
+        $location->delete();
         return redirect()->route('locations-index')->with("status", "Successfully destroyed location.");
       } else {
         return redirect()->route('events-index')->with('warning', 'You are not authorized to complete that action');

@@ -15,6 +15,11 @@ class AppServiceProvider extends ServiceProvider
      */
     public function boot()
     {
+      if(config('database.default') == 'sqlite'){
+          $db = app()->make('db');
+          $db->connection()->getPdo()->exec("pragma foreign_keys=1");
+      }
+      
       Validator::extend('current_user_is_admin', function ($attribute, $value, $parameters, $validator) {
         return Auth::user()->role == 2;
       });

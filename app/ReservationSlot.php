@@ -20,6 +20,21 @@ class ReservationSlot extends Model
     
   }
   
+  public static function boot()
+  {
+      parent::boot();
+
+      static::deleted(function ($reservation_slot) {
+
+          $reservation_slot->reservations()->delete();
+        
+          foreach ($reservation_slot->reservation_slot_groups as $group) {
+            $group->pivot->delete();
+          }
+
+      });
+  }
+
   public function set_hours_of_operation(Array $hours_of_operation) {
     $this->hours_of_operation = json_encode($hours_of_operation);
   }
@@ -38,15 +53,6 @@ class ReservationSlot extends Model
         return $this->belongsToMany('App\ReservationSlotGroup', 'group_reservation_slots');
   }
   
-  public function custom_destroy() {
-    foreach($this->reservations as $reservation) {
-      $reservation->custom_destroy();
-    }
-    foreach ($this->reservation_slot_groups as $group) {
-      $group->pivot->delete();
-    }
-    return $this->delete();
-  }
   
   public function has_reservation_slot_group(ReservationSlotGroup $reservation_slot_group) {
     if (!is_null($this->reservation_slot_groups)) {

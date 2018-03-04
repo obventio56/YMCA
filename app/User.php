@@ -32,6 +32,19 @@ class User extends Authenticatable
      * @var array
      */
   
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleted(function ($user) {
+
+            $user->events()->delete();
+            $user->reservations()->delete();
+            $user->registrations()->delete();
+
+        });
+    }
+  
     public function reservations()
     {
       return $this->hasMany('App\Reservation');

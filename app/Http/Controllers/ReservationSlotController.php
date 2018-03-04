@@ -108,7 +108,7 @@ class ReservationSlotController extends Controller
   
     public function destroy(ReservationSlot $reservation_slot) {
       if (Gate::allows('manipulate-reservation-slot', $reservation_slot)) {
-        $reservation_slot->custom_destroy();
+        $reservation_slot->delete();
         return redirect()->route('reservation-slots-index');
       } else {
         return redirect()->route('events-index')->with('warning', 'You are not authorized to complete that action');

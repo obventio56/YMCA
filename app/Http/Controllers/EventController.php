@@ -51,7 +51,8 @@ class EventController extends Controller
   }
   
   public function name($name) {
-    $events = Event::all()->where('name', $name);
+    $events = Event::all()->where('name', $name)
+      ->sortBy('reservation.start_time');
     return view('events.search', ["events" => $events,
                                  "name" => $name]);
   }
@@ -189,7 +190,7 @@ class EventController extends Controller
   
   public function destroy(Event $event)  {
     if (Gate::allows('manipulate-event', $event)) {
-      $event->custom_destroy(); //sends cancelation email
+      $event->delete(); //sends cancelation email
       return redirect()->route('events-index')->with('status', 'Successfully Deleted Event.');
     } else {
       return redirect()->route('events-index');

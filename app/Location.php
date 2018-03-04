@@ -21,10 +21,15 @@ class Location extends Model
         return $this->hasMany('App\ReservationSlot');
     }
   
-    public function custom_destroy() {
-      foreach ($this->reservation_slots as $reservation_slot) {
-        $reservation_slot->custom_destroy();
-      }
-      return $this->delete();
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleted(function ($location) {
+
+            $location->reservation_slots()->delete();
+
+        });
     }
+
 }

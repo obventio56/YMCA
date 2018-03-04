@@ -12,12 +12,16 @@ class Reservation extends Model
    
   protected $fillable = ["reservation_slot_id", "notes"];
   
-  public function custom_destroy() {
-    if ($this->for_event) {
-      $this->event->custom_destroy(false); //false to not delete reservation (double jepordy)
+    public static function boot()
+    {
+        parent::boot();
+
+        static::deleted(function ($reservation) {
+
+            $reservation->event()->delete();
+
+        });
     }
-    return $this->delete();
-  }
   
   public function reservation_slot() {
     return $this->belongsTo('App\ReservationSlot');
