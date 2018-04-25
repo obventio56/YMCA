@@ -77,7 +77,7 @@
 		@endif
 		-->
 	<div class="container">
-		<h3>Oops! You're lost!</h3>
+		<h3>Oops! Looks like you're lost!</h3>
 		<p>Better head <a href="{{route('events-index')}}">home</a></p>
 	</div>
 	

@@ -12,13 +12,7 @@ class ReservationSlot extends Model
   
   protected $fillable = ['location_id', 'title', 'description', 'primary_email', 'notification_emails', 'time_interval', 'max_time', 'reservation_window', 'notes', 'public'];
 
-  //I don't know if this is bad form but I'm going to do it anyways:
-  
-  public function get_hours_of_operation() {
 
-    return json_decode($this->hours_of_operation);
-    
-  }
   
   public static function boot()
   {
@@ -33,6 +27,14 @@ class ReservationSlot extends Model
           }
 
       });
+  }
+  
+  //I don't know if this is bad form but I'm going to do it anyways:
+  
+  public function get_hours_of_operation() {
+
+    return json_decode($this->hours_of_operation);
+    
   }
 
   public function set_hours_of_operation(Array $hours_of_operation) {

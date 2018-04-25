@@ -39,12 +39,8 @@ class RegistrationController extends Controller
   }
     
   public function destroy(Registration $registration) {
-    if (Gate::allows('destroy-registration', $registration)) {
-      $registration->delete();
-      return back();
-    } else {
-      return redirect()->route('events-index');
-    }
+    $registration->delete();
+    return back();
   }
   
 }

@@ -84,85 +84,71 @@ class UserController extends Controller
   
     public function index(Request $request, $role = 'all')
     {
-      if (Gate::allows('users-index')) {
-        $users = User::whereIn('role', $this->role_lookup[$role])->orderBy('name')->paginate(15);
-        if ($request->name) {
-          $users = User::whereIn('role', $this->role_lookup[$role])
-            ->where('name', 'LIKE', '%' . $request->name . '%')
-            ->orderBy('name')->paginate(1000);
-        }
-        return view('users.index', ['users' => $users, 'role' => ucfirst($role)]);
-      } else {
-        return redirect()->route('events-index')->with('warning', 'You are not authorized to complete that action');
+      $users = User::whereIn('role', $this->role_lookup[$role])->orderBy('name')->paginate(15);
+      if ($request->name) {
+        $users = User::whereIn('role', $this->role_lookup[$role])
+          ->where('name', 'LIKE', '%' . $request->name . '%')
+          ->orderBy('name')->paginate(1000);
       }
+      return view('users.index', ['users' => $users, 'role' => ucfirst($role)]);
     }
   
     public function edit(User $user) {
-      if (Gate::allows('manipulate-user', $user)) {
         $current_user = Auth::user();
         return view('users.edit', ['user' => $user, 'current_user' => $current_user]);
-      } else {
-        return redirect()->route('events-index')->with('warning', 'You are not authorized to complete that action');
-      }
     }
   
     public function update(User $user, Request $request) 
     {
-      if (Gate::allows('manipulate-user', $user)) {
+      $updated_values = $request->all();
 
-        $updated_values = $request->all();
-
-        //if the password is being updated, ensure it meets requirements and bycript it
-        if (!is_null($updated_values["password"])) {
-          $validator = $this->update_password_rules($updated_values);
-          if ($validator->fails()) {
-            return Redirect::back()
-                  ->withErrors($validator) // send back all errors to the login form
-                  ->withInput();
-          } else {
-            $updated_values["password"] = bcrypt($updated_values['password']);
-            unset($updated_values["password_confirmation"]);
-          }       
-        }
-
-        //if the role is being updated, make sure the current user is an admin
-        if (array_key_exists("role", $updated_values)) {
-          $validator = $this->update_role_rules($updated_values);
-          if ($validator->fails()) {
-            return Redirect::back()
-                  ->withErrors($validator) // send back all errors to the login form
-                  ->withInput();
-          }
-          $user->role = $updated_values["role"];
-        }
-        
-        $validator = Validator::make($updated_values, [
-            'email' => 'unique:users,email'.$user->id
-        ]);
+      //if the password is being updated, ensure it meets requirements and bycript it
+      if (!is_null($updated_values["password"])) {
+        $validator = $this->update_password_rules($updated_values);
         if ($validator->fails()) {
-            return Redirect::back()
-                  ->withErrors($validator) // send back all errors to the login form
-                  ->withInput();
-        }
-        
-        $user->update( array_filter($updated_values)); //array_filter removes null password
-        
-        //sorry this is gross, don't know a better way to do it...
-        //it is protected by auth.
-        if (!isset($updated_values["suspended"]) && $user->suspended){
-          $user->suspended = false;
-        }
-        
-        $user->save();
+          return Redirect::back()
+                ->withErrors($validator) // send back all errors to the login form
+                ->withInput();
+        } else {
+          $updated_values["password"] = bcrypt($updated_values['password']);
+          unset($updated_values["password_confirmation"]);
+        }       
+      }
 
-        return redirect()->route('edit-user', [$user])->with('status', 'User successfully updated');
-      } else {
-        return redirect()->route('events-index')->with('warning', 'You are not authorized to complete that action');
-      } 
+      //if the role is being updated, make sure the current user is an admin
+      if (array_key_exists("role", $updated_values)) {
+        $validator = $this->update_role_rules($updated_values);
+        if ($validator->fails()) {
+          return Redirect::back()
+                ->withErrors($validator) // send back all errors to the login form
+                ->withInput();
+        }
+        $user->role = $updated_values["role"];
+      }
+
+      $validator = Validator::make($updated_values, [
+          'email' => 'unique:users,email'.$user->id
+      ]);
+      if ($validator->fails()) {
+          return Redirect::back()
+                ->withErrors($validator) // send back all errors to the login form
+                ->withInput();
+      }
+
+      $user->update( array_filter($updated_values)); //array_filter removes null password
+
+      //sorry this is gross, don't know a better way to do it...
+      //it is protected by auth.
+      if (!isset($updated_values["suspended"]) && $user->suspended){
+        $user->suspended = false;
+      }
+
+      $user->save();
+
+      return redirect()->route('edit-user', [$user])->with('status', 'User successfully updated');
     }
   
     public function destroy(User $user) {
-      if (Gate::allows('delete-user', $user)) {
         $current_user = Auth::user();
         $redirect = redirect()->route('users-index')->with('status', 'User successfully deleted');
         if ($current_user == $user) {
@@ -171,8 +157,5 @@ class UserController extends Controller
         }
         $user->delete();
         return $redirect;
-      } else {
-        return redirect()->route('events-index')->with('warning', 'You are not authorized to complete that action');
-      }
     }
 }

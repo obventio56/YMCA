@@ -96,7 +96,18 @@
 		@endif
 		-->
 		@yield('content')
+    
 	</div>
+  <!--
+  <div class="footer">
+    <a href="http://www.carlislefamilyymca.org">
+      Return to
+        <div class="back-to-site"></div>
+      
+        main site
+    </a>
+-->
+  </div>
   <script src="{{ asset('js/app.js') }}"></script> 
   <script src="{{ asset('js/jquery-1.8.0.min.js') }}"></script> 
   <script src="{{ asset('js/jquery-ui-1.8.23.custom.min.js') }}"></script> 

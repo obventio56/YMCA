@@ -14,7 +14,7 @@
 	    </tr>
 	  </thead>
 	  <tbody>
-			@foreach (Auth::user()->registrations ->where('event.reservation.start_time', '>', date('Y-m-d')) as $registration)
+			@foreach (Auth::user()->registrations()->with(["event", "event.reservation", "event.reservation.reservation_slot"])->get()->where('event.reservation.start_time', '>', date('Y-m-d')) as $registration)
 			 <tr>
 	    	<td style="width: 120px;"><b><a href="{{route('show-event', [$registration->event])}}">{{$registration->event->name}}</a></b></td>
 	      <td><p>{{$registration->event->description}}</p><p><i>{{$registration->event->reservation->reservation_slot->title}}<br/>

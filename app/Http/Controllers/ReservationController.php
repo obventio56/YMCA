@@ -18,12 +18,8 @@ use App\Mail\ReservationFacultyNotification;
 class ReservationController extends Controller
 {
   public function calendar() {
-    if (Gate::allows('administrate-reservations')) {
-      $reservations = Reservation::whereDate('start_time', '>', date('Y-m-d', strtotime('-1 year')) )->get();
-      return view('reservations.calendar', ["reservations" => $reservations]);
-    } else {
-      return redirect()->route('events-index')->with('warning', 'You are not authorized to complete that action');
-    }
+    $reservations = Reservation::whereDate('start_time', '>', date('Y-m-d', strtotime('-1 year')) )->get();
+    return view('reservations.calendar', ["reservations" => $reservations]);
   }
   
   public function check_date($reservation_slots) {
@@ -103,50 +99,42 @@ class ReservationController extends Controller
   }
   
   public function create(Request $request) {
-    if (Gate::allows('create-reservation')) {
-      $reservation_slot = ReservationSlot::find($request->reservation_slot_id);
-      $start_time = strtotime($request->start_time);
-      $end_time = $start_time + intval($request->length)*60;
-      $admin = Auth::user()->role == 2;
-      $time_validation = Reservation::validate_reservation_time($reservation_slot, $start_time, $end_time, $admin);
-      if ($time_validation) {
-        return $time_validation;
-      }
-
-      $reservation = new Reservation();
-      $start_time = strtotime($request->start_time);
-      $reservation->start_time = date("Y-m-d H:i:s", $start_time);
-      $reservation->end_time = date("Y-m-d H:i:s", $start_time + intval($request->length)*60);
-      $reservation->user_id = Auth::user()->id;
-      $reservation->fill($request->all());
-
-      $reservation->save();
-
-      //send mail
-      Mail::to(Auth::user())->send(new ReservationConfirmation($reservation));
-      if ($reservation->reservation_slot->primary_email != "") {
-        $faculty_mailer = Mail::to( explode(",", $reservation->reservation_slot->primary_email));
-
-        $notification_emails = explode(",", $reservation->reservation_slot->notification_emails);
-        if ($notification_emails[0] != "") {
-          $faculty_mailer->cc($notification_emails)->send(new ReservationFacultyNotification($reservation));
-        } else {
-          $faculty_mailer->send(new ReservationFacultyNotification($reservation));
-        } 
-      }
-      return redirect()->route('reservation-slots-index')->with('status', 'Successfully Created Reservation.');
-    } else {
-      return redirect()->route('events-index')->with('warning', 'You are not authorized to complete that action');
+    $reservation_slot = ReservationSlot::find($request->reservation_slot_id);
+    $start_time = strtotime($request->start_time);
+    $end_time = $start_time + intval($request->length)*60;
+    $admin = Auth::user()->role == 2;
+    $time_validation = Reservation::validate_reservation_time($reservation_slot, $start_time, $end_time, $admin);
+    if ($time_validation) {
+      return $time_validation;
     }
+
+    $reservation = new Reservation();
+    $start_time = strtotime($request->start_time);
+    $reservation->start_time = date("Y-m-d H:i:s", $start_time);
+    $reservation->end_time = date("Y-m-d H:i:s", $start_time + intval($request->length)*60);
+    $reservation->user_id = Auth::user()->id;
+    $reservation->fill($request->all());
+
+    $reservation->save();
+
+    //send mail
+    Mail::to(Auth::user())->send(new ReservationConfirmation($reservation));
+    if ($reservation->reservation_slot->primary_email != "") {
+      $faculty_mailer = Mail::to( explode(",", $reservation->reservation_slot->primary_email));
+
+      $notification_emails = explode(",", $reservation->reservation_slot->notification_emails);
+      if ($notification_emails[0] != "") {
+        $faculty_mailer->cc($notification_emails)->send(new ReservationFacultyNotification($reservation));
+      } else {
+        $faculty_mailer->send(new ReservationFacultyNotification($reservation));
+      } 
+    }
+    return redirect()->route('reservation-slots-index')->with('status', 'Successfully Created Reservation.');
   }
   
   public function destroy(Reservation $reservation) {
-    if (Gate::allows('manipulate-reservation', $reservation)) {
-      $reservation->delete();
-      return redirect()->route('reservation-slots-index')->with('status', 'Successfully Deleted Reservation.');
-    } else {
-      return redirect()->route('events-index')->with('warning', 'You are not authorized to complete that action');
-    }
+    $reservation->delete();
+    return redirect()->route('reservation-slots-index')->with('status', 'Successfully Deleted Reservation.');
   }
   
   //how long can this reservation be:
