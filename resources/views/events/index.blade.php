@@ -56,7 +56,7 @@
 					</td>
 	      <td><p>{{$event->description}}</p><p><i>{{$event->reservation->reservation_slot->title}}<br/>Date: {{date("l F j, Y", strtotime($event->reservation->start_time))}}
           <br/>Time: {{date("g:i A", strtotime($event->reservation->start_time))}} - {{date("g:i A", strtotime($event->reservation->end_time))}}</td>
-	      <td>{{$event->notification_email}}</td>
+          <td><a href="mailto:{{$event->notification_email}}">{{$event->notification_email}}</a></td>
         <td>
 					@if (Auth::user()->role == 2 || Auth::user() == $event->user)
          	 	<a href="{{route('destroy-event', $event)}}" confirm="Are you sure?" class="btn btn-danger pull-right">Delete Event</a>

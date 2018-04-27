@@ -38,3 +38,11 @@ $(".calendar-table tr").each( function() {
 			})
 	});
 }
+
+$(document).ready( function() {
+   $('a.btn-danger').click( function(e) {
+    if (!confirm("Are you sure you want to: " + $(this).text())) {
+      e.preventDefault();
+    }
+   });
+});

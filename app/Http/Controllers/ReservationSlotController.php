@@ -62,7 +62,8 @@ class ReservationSlotController extends Controller
   
     public function create(StoreReservationSlot $request) {
       $reservation_slot = new ReservationSlot() ;
-      $reservation_slot->fill($request->all());     
+      $reservation_slot->fill($request->all()); 
+      $reservation_slot->notification_emails = $this->parse_emails($request->notification_emails); //only save valid emails as json
       $reservation_slot->hours_of_operation = json_encode($request->hours_of_operation);
       $reservation_slot->user_id = Auth::user()->id;
       $reservation_slot->location_id = intval($request->location_id);
@@ -88,6 +89,7 @@ class ReservationSlotController extends Controller
     public function update(StoreReservationSlot $request, ReservationSlot $reservation_slot) {
       $reservation_slot->fill($request->all());
       $reservation_slot->hours_of_operation = json_encode($request->hours_of_operation);
+      $reservation_slot->notification_emails = $this->parse_emails($request->notification_emails); //only save valid emails as json
       $reservation_slot->save();
       if ($reservation_slot->reservation_slot_groups()->sync($request->groups)) {
         return redirect()->route('reservation-slots-index');
@@ -102,5 +104,13 @@ class ReservationSlotController extends Controller
     public function destroy(ReservationSlot $reservation_slot) {
       $reservation_slot->delete();
       return redirect()->route('reservation-slots-index');
+    }
+  
+    //parse a bunch of emails from a single text field
+    function parse_emails($email_text) {
+      $emails = array();
+      preg_match('(?:[a-z0-9!#$%&\'*+/=?^_`{|}~-]+(?:\.[a-z0-9!#$%&\'*+/=?^_`{|}~-]+)*|"(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21\x23-\x5b\x5d-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])*")@(?:(?:[a-z0-9](?:[a-z0-9-]*[a-z0-9])?\.)+[a-z0-9](?:[a-z0-9-]*[a-z0-9])?|\[(?:(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?)\.){3}(?:25[0-5]|2[0-4][0-9]|[01]?[0-9][0-9]?|[a-z0-9-]*[a-z0-9]:(?:[\x01-\x08\x0b\x0c\x0e-\x1f\x21-\x5a\x53-\x7f]|\\[\x01-\x09\x0b\x0c\x0e-\x7f])+)\])',
+                 $email_text, $emails);
+      return json_encode($emails);
     }
 }

@@ -46,7 +46,12 @@
 		      	<a style="color: #ff0000;" href="{{route('check-date-for-reservation', [$reservation_slot])}}">{{route('check-date-for-reservation', [$reservation_slot])}}</a>
 	      	</p>
 	      </td>
-	      <td>{{$reservation_slot->primary_email}}<br/><br/>{{str_replace(",", ", ", $reservation_slot->notification_emails)}}</td>
+	      <td><a href="mailto:{{$reservation_slot->primary_email}}">{{$reservation_slot->primary_email}}<br/><br/>
+          @foreach ($reservation_slot->get_notification_emails() as $email)
+          <span><a href="mailto:{{$email}}">{{$email}}</a></span>
+          @endforeach
+          
+        </td>
 				<td style="width: 270px;"><a class="btn btn-danger pull-right" href="{{route("destroy-reservation-slot", [$reservation_slot])}}">Delete Reservation Slot</a>
 					<a class="btn btn-info pull-right" style="margin-right: 9px;" href="{{route("edit-reservation-slot", [$reservation_slot])}}">Edit Reservation Slot</a>
 	    </tr>
