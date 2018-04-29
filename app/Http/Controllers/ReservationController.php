@@ -122,8 +122,8 @@ class ReservationController extends Controller
     if ($reservation->reservation_slot->primary_email != "") {
       $faculty_mailer = Mail::to( explode(",", $reservation->reservation_slot->primary_email));
 
-      $notification_emails = explode(",", $reservation->reservation_slot->notification_emails);
-      if ($notification_emails[0] != "") {
+      $notification_emails = $reservation->reservation_slot->get_notification_emails();
+      if (!empty($notification_emails)) {
         $faculty_mailer->cc($notification_emails)->send(new ReservationFacultyNotification($reservation));
       } else {
         $faculty_mailer->send(new ReservationFacultyNotification($reservation));

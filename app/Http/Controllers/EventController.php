@@ -114,8 +114,8 @@ class EventController extends Controller
         if ($event->save()) {
           if ($reservation->reservation_slot->primary_email != "") {
             $mailer = Mail::to( explode(",", $reservation->reservation_slot->primary_email));
-            $notification_emails = explode(",", $reservation->reservation_slot->notification_emails);
-            if ($notification_emails[0] != "") {
+            $notification_emails = $reservation->reservation_slot->get_notification_emails();
+            if (!empty($notification_emails)) {
               $mailer = $mailer->bcc($notification_emails);
             }
             $mailer->send(new EventFacultyNotification($event));
