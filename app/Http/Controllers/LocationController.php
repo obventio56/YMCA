@@ -40,15 +40,11 @@ class LocationController extends Controller
   
     public function create(StoreLocation $request)
     {
-      if (Gate::allows('manipulate-location')) {
         $location = new Location;
         $location->fill($request->all());
         $location->save();
 
         return redirect()->route('locations-index')->with("status", "Successfully created location.");
-      } else {
-        return redirect()->route('events-index')->with('warning', 'You are not authorized to complete that action');
-      }
     }
   
     public function edit(Location $location)
@@ -58,21 +54,13 @@ class LocationController extends Controller
   
     public function update(StoreLocation $request, Location $location)
     {
-      if (Gate::allows('manipulate-location')) {
         $location->update(array_filter($request->all()));
-
         return redirect()->route('locations-index')->with("status", "Successfully updated location.");
-      } else {
-        return redirect()->route('events-index')->with('warning', 'You are not authorized to complete that action');
-      }
+
     }
   
     public function destroy(Location $location) {
-      if (Gate::allows('manipulate-location')) {
-        $location->delete();
-        return redirect()->route('locations-index')->with("status", "Successfully destroyed location.");
-      } else {
-        return redirect()->route('events-index')->with('warning', 'You are not authorized to complete that action');
-      }
+      $location->delete();
+      return redirect()->route('locations-index')->with("status", "Successfully destroyed location.");
     }
 }

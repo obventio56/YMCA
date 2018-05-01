@@ -12,13 +12,7 @@ class ReservationSlot extends Model
   
   protected $fillable = ['location_id', 'title', 'description', 'primary_email', 'notification_emails', 'time_interval', 'max_time', 'reservation_window', 'notes', 'public'];
 
-  //I don't know if this is bad form but I'm going to do it anyways:
-  
-  public function get_hours_of_operation() {
 
-    return json_decode($this->hours_of_operation);
-    
-  }
   
   public static function boot()
   {
@@ -34,7 +28,27 @@ class ReservationSlot extends Model
 
       });
   }
+  
+  //I don't know if this is bad form but I'm going to do it anyways:
+  
+  public function get_hours_of_operation() {
 
+    return json_decode($this->hours_of_operation);
+    
+  }
+  
+  public function get_notification_emails() {
+    $emails = json_decode($this->notification_emails);
+    if (is_null($emails)) {
+      $this->notification_emails = json_encode(explode(",",$this->notification_emails));
+      $this->save();
+    }
+    
+    
+    return json_decode($this->notification_emails);
+      
+  }
+  
   public function set_hours_of_operation(Array $hours_of_operation) {
     $this->hours_of_operation = json_encode($hours_of_operation);
   }
@@ -63,3 +77,12 @@ class ReservationSlot extends Model
     return false;
   }
 }
+
+/*
+>>> foreach (ReservationSlot::all() as $reservation_slot)
+>>> $reservation_slot->notification_emails = json_encode(explode(",",$reservation_slot->notification_emails));
+=> "[""]"
+>>> $reservation_slot->save();
+=> true
+>>> endforeach
+*/

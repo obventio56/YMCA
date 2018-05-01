@@ -26,7 +26,7 @@ class StoreReservationSlot extends FormRequest
         return [
         'title' => 'required',
         'primary_email' => 'required|email',
-        'notification_emails' => 'nullable|email_list',
+        'notification_emails' => 'nullable',
         'time_interval' => 'required|integer',
         'max_time' => 'required|integer|greater_than_field:time_interval',
         'reservation_window' => 'required|integer',

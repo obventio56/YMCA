@@ -4917,3 +4917,33 @@ table a.btn {
 input.no-margin {
   margin-bottom:0;
 }
+
+.footer {
+  min-height: 150px;
+  display:flex;
+  flex-direction:column;
+  align-items:stretch;
+  justify-content:center;
+  background-color:#0089d0;
+  margin-top:50px;
+}
+.footer *, .footer a:hover {
+  color:white;
+  text-decoration: none;
+  text-align:center;
+}
+.footer a {
+  display:flex;
+  flex-direction:column;
+  align-items:center;
+  justify-content:center; 
+}
+
+.back-to-site {
+  width:50px;
+  height: 50px;
+  background-image: url("http://www.carlislefamilyymca.org/img/logo.png");
+  background-size:contain;
+  background-position:center;
+  background-repeat: no-repeat;
+}

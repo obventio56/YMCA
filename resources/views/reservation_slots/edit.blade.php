@@ -22,7 +22,7 @@
         
         <label for="notification_emails">Email Addresses for Notifications</label>
         <label for="notification_emails">(separate email addresses with a comma and don't use spaces)</label>
-        <input value="{{ $reservation_slot->notification_emails }}" type="text" name="notification_emails"/><br/><br/>
+        <input value="{{ join(", ", $reservation_slot->get_notification_emails()) }}" type="text" name="notification_emails"/><br/><br/>
 				
 				<label for="location_id">Location</label>
         <select name="location_id">

@@ -1,7 +1,7 @@
 <!DOCTYPE html>
 <html>
 <head>
-  <title>YMCA Scheduler</title>
+  <title>Not the YMCA Scheduler</title>
     <!-- Styles -->
 	
 	<link href="{{ asset('css/app.css') }}" rel="stylesheet">
@@ -26,7 +26,7 @@
 	        <div class="nav-collapse">
 	          <ul class="nav pull-right">
 	            @if (Auth::guest())
-							<li><a href="{{ route('register') }}">Sign Up</a></li>
+							<li><a href="{{ route('register') }}">fadsfadsfSign Up</a></li>
 							@else
 								@if (Auth::user()->role == 2)
 									<li><a href="{{route('events-index')}}">Events & Classes</a></li>
@@ -96,7 +96,19 @@
 		@endif
 		-->
 		@yield('content')
+    
 	</div>
+  <!--
+  <div class="footer">
+    <a href="http://www.carlislefamilyymca.org">
+      Return to
+        <div class="back-to-site"></div>
+      
+        main site
+    </a>
+-->
+  </div>
+  
   <script src="{{ asset('js/app.js') }}"></script> 
   <script src="{{ asset('js/jquery-1.8.0.min.js') }}"></script> 
   <script src="{{ asset('js/jquery-ui-1.8.23.custom.min.js') }}"></script> 
